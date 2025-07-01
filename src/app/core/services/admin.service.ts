@@ -25,7 +25,7 @@ export interface CreateProductRequest {
   description: string;
   price: number;
   stock: number;
-  imageUrl?: string;
+  keywords: string;
   categoryId?: number;
   subcategoryId?: number;
 }
@@ -36,7 +36,7 @@ export interface UpdateProductRequest {
   description: string;
   price: number;
   stock: number;
-  imageUrl?: string;
+  keywords: string;
   categoryId?: number;
   subcategoryId?: number;
 }

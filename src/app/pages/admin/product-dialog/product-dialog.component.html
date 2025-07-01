@@ -121,15 +121,13 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>URL de la Imagen</mat-label>
-          <input
+          <mat-label>Keywords</mat-label>
+          <textarea
             matInput
-            formControlName="imageUrl"
-            placeholder="https://ejemplo.com/imagen.jpg"
-          />
-          <mat-error *ngIf="productForm.get('imageUrl')?.hasError('pattern')">
-            Ingrese una URL válida
-          </mat-error>
+            formControlName="keywords"
+            rows="3"
+            placeholder="Ingrese keywords de busqueda"
+          ></textarea>
         </mat-form-field>
       </div>
     </mat-dialog-content>

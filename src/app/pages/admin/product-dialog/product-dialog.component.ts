@@ -66,7 +66,7 @@ export class ProductDialogComponent implements OnInit {
       description: ["", [Validators.required]],
       price: [0, [Validators.required, Validators.min(0)]],
       stock: [0, [Validators.required, Validators.min(0)]],
-      imageUrl: ["", [Validators.pattern("https?://.+")]],
+      keywords: [""],
       categoryId: [null, [Validators.required]],
       subcategoryId: [null],
     });
@@ -81,7 +81,7 @@ export class ProductDialogComponent implements OnInit {
         description: this.data.product.description,
         price: this.data.product.price,
         stock: this.data.product.stock,
-        imageUrl: this.data.product.imageUrl || "",
+        keywords: this.data.product.keywords || "",
         categoryId: this.data.product.categoryId || null,
         subcategoryId: this.data.product.subcategoryId || null,
       });
@@ -139,11 +139,6 @@ export class ProductDialogComponent implements OnInit {
     if (this.productForm.valid) {
       this.loading = true;
       const formValue = this.productForm.value;
-
-      // Remove empty imageUrl
-      if (!formValue.imageUrl) {
-        delete formValue.imageUrl;
-      }
 
       // Remove null values for category and subcategory
       if (!formValue.categoryId) {
