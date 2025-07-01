@@ -1,0 +1,141 @@
+<div class="products-page">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <mat-icon>shopping_bag</mat-icon>
+        Nuestros Productos
+      </h1>
+      <p class="page-subtitle">Descubre nuestra amplia selección de productos de alta calidad</p>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-section">
+    <app-product-search 
+      (searchResults)="onSearchResults($event)"
+      (searchCleared)="onSearchCleared()">
+    </app-product-search>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Sidebar with Categories -->
+    <aside class="sidebar">
+      <app-category-filter
+        (categorySelected)="onCategorySelected($event)"
+        (clearFilter)="onCategoryFilterCleared()">
+      </app-category-filter>
+    </aside>
+
+    <!-- Products Section -->
+    <main class="products-section">
+      <!-- Active Filters -->
+      <div class="active-filters" *ngIf="getActiveFiltersCount() > 0">
+        <h3>Filtros Activos:</h3>
+        <div class="filter-chips">
+          <mat-chip *ngIf="selectedCategory" color="primary" selected>
+            <mat-icon>category</mat-icon>
+            Categoría seleccionada
+          </mat-chip>
+          <mat-chip *ngIf="selectedSubcategory" color="accent" selected>
+            <mat-icon>subdirectory_arrow_right</mat-icon>
+            Subcategoría seleccionada
+          </mat-chip>
+          <mat-chip *ngIf="isSearchActive" color="warn" selected>
+            <mat-icon>search</mat-icon>
+            Búsqueda activa
+          </mat-chip>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner">
+          <mat-icon class="spinner">hourglass_empty</mat-icon>
+          <p>Cargando productos...</p>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="error-container">
+        <mat-card class="error-card">
+          <mat-card-content>
+            <mat-icon class="error-icon">error_outline</mat-icon>
+            <h3>Error</h3>
+            <p>{{ error }}</p>
+            <button mat-raised-button color="primary" (click)="loadProducts()">
+              <mat-icon>refresh</mat-icon>
+              Reintentar
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Products Grid -->
+      <div *ngIf="!loading && !error" class="products-content">
+        <div class="products-header">
+          <h2>Productos Disponibles</h2>
+          <p class="products-count">
+            {{ filteredProducts.length }} producto{{ filteredProducts.length !== 1 ? 's' : '' }} encontrado{{ filteredProducts.length !== 1 ? 's' : '' }}
+          </p>
+        </div>
+
+        <div *ngIf="filteredProducts.length === 0" class="no-products">
+          <mat-card class="no-products-card">
+            <mat-card-content>
+              <mat-icon class="no-products-icon">inventory_2</mat-icon>
+              <h3>No se encontraron productos</h3>
+              <p>Intenta ajustar tus filtros de búsqueda o categorías</p>
+              <button mat-raised-button color="primary" (click)="onCategoryFilterCleared()">
+                <mat-icon>clear_all</mat-icon>
+                Limpiar filtros
+              </button>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div class="products-grid" *ngIf="filteredProducts.length > 0">
+          <div class="product-card" *ngFor="let product of filteredProducts">
+            <div class="product-image-container">
+              <img [src]="'assets/images/' + product.id + '.jpg'" [alt]="product.name" class="product-image">
+              <div class="product-overlay">
+                <button 
+                  mat-fab 
+                  color="primary"
+                  (click)="addToCart(product)" 
+                  [disabled]="isAddingToCart(product.id)"
+                  class="quick-add-btn">
+                  <mat-icon *ngIf="!isAddingToCart(product.id)">add_shopping_cart</mat-icon>
+                  <mat-icon *ngIf="isAddingToCart(product.id)" class="spinner">hourglass_empty</mat-icon>
+                </button>
+              </div>
+            </div>
+            
+            <div class="product-info">
+              <h3 class="product-name">{{ product.name }}</h3>
+              <p class="product-description">{{ product.description }}</p>
+              <div class="product-meta">
+                <span class="product-price">${{ product.price.toFixed(2) }}</span>
+                <span class="product-stock" [class.low-stock]="product.stock < 10">
+                  <mat-icon>inventory</mat-icon>
+                  {{ product.stock }} en stock
+                </span>
+              </div>
+              <button 
+                mat-raised-button 
+                color="primary"
+                (click)="addToCart(product)" 
+                [disabled]="isAddingToCart(product.id)"
+                class="add-to-cart-btn">
+                <mat-icon *ngIf="!isAddingToCart(product.id)">add_shopping_cart</mat-icon>
+                <mat-icon *ngIf="isAddingToCart(product.id)" class="spinner">hourglass_empty</mat-icon>
+                {{ isAddingToCart(product.id) ? 'Agregando...' : 'Agregar al Carrito' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div> 

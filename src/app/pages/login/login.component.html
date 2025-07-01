@@ -1,0 +1,63 @@
+<div class="login-container">
+  <div class="login-box">
+    <h2>Iniciar Sesión</h2>
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Correo Electrónico</mat-label>
+          <input
+            matInput
+            type="email"
+            name="email"
+            [(ngModel)]="loginData.email"
+            required
+            email
+            #email="ngModel"
+            placeholder="Ingrese su correo electrónico"
+          />
+          <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+            <span *ngIf="email.errors?.['required']">El correo electrónico es requerido</span>
+            <span *ngIf="email.errors?.['email']">Ingrese un correo electrónico válido</span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            type="password"
+            name="password"
+            [(ngModel)]="loginData.password"
+            required
+            minlength="6"
+            #password="ngModel"
+            placeholder="Ingrese su contraseña"
+          />
+          <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+            <span *ngIf="password.errors?.['required']">La contraseña es requerida</span>
+            <span *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <button 
+        mat-raised-button 
+        color="primary" 
+        type="submit" 
+        [disabled]="loginForm.invalid || loading" 
+        class="login-button full-width"
+      >
+        <mat-icon *ngIf="!loading">login</mat-icon>
+        <span *ngIf="loading">Iniciando sesión...</span>
+        <span *ngIf="!loading">Iniciar Sesión</span>
+      </button>
+    </form>
+
+    <div class="register-link">
+      ¿No tienes una cuenta? <a routerLink="/register">Regístrate aquí</a>
+    </div>
+  </div>
+</div> 
+

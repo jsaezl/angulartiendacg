@@ -1,0 +1,56 @@
+<mat-toolbar color="primary">
+  <div class="logo-container">
+    <img src="assets/images/logo.jpg" alt="Shopping Cart Logo" class="logo" />
+    <span class="brand-name">Shopping Cart</span>
+  </div>
+  <span class="spacer"></span>
+
+  <div *ngIf="!isAuthenticated()" class="nav-links">
+    <button mat-button routerLink="/login">
+      <mat-icon>person</mat-icon>
+      Ir a Login
+    </button>
+
+    <button mat-button routerLink="/products-list">
+      <mat-icon>shopping_bag</mat-icon>
+      Productos
+    </button>
+  </div>
+
+  <div *ngIf="isAuthenticated()" class="nav-links">
+    <button mat-button routerLink="/login">
+      <mat-icon>person</mat-icon>
+      {{ usuario }}
+    </button>
+    <button mat-button routerLink="/products-list">
+      <mat-icon>shopping_bag</mat-icon>
+      Productos
+    </button>
+    <button
+      mat-icon-button
+      routerLink="/cart"
+      [matBadge]="cartCount"
+      matBadgeColor="accent"
+    >
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+    <button
+      *ngIf="isAdmin()"
+      mat-button
+      routerLink="/admin"
+      matTooltip="Panel de Administración"
+    >
+      <mat-icon>admin_panel_settings</mat-icon>
+      Admin
+    </button>
+    <button
+      mat-icon-button
+      (click)="onLogout()"
+      matTooltip="Cerrar sesión"
+      aria-label="Cerrar sesión"
+    >
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+<router-outlet></router-outlet>

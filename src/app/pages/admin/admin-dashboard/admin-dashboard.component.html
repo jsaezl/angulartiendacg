@@ -1,0 +1,80 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Panel de Administración</h1>
+    <p>Bienvenido al panel de control del administrador</p>
+  </div>
+
+  <div class="stats-grid" *ngIf="!loading; else loadingTemplate">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon products">inventory</mat-icon>
+          <div class="stat-info">
+            <h3>{{ dashboardStats.totalProducts }}</h3>
+            <p>Productos</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon users">people</mat-icon>
+          <div class="stat-info">
+            <h3>{{ dashboardStats.totalUsers }}</h3>
+            <p>Usuarios</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon orders">shopping_cart</mat-icon>
+          <div class="stat-info">
+            <h3>{{ dashboardStats.totalOrders }}</h3>
+            <p>Órdenes</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon revenue">attach_money</mat-icon>
+          <div class="stat-info">
+            <h3>{{ dashboardStats.totalRevenue.toFixed(2) }}</h3>
+            <p>Ingresos</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="admin-actions">
+    <h2>Acciones Rápidas</h2>
+    <div class="actions-grid">
+      <button mat-raised-button color="primary" (click)="navigateToProducts()">
+        <mat-icon>inventory</mat-icon>
+        Gestionar Productos
+      </button>
+      <button mat-raised-button color="accent" (click)="navigateToUsers()">
+        <mat-icon>people</mat-icon>
+        Gestionar Usuarios
+      </button>
+      <button mat-raised-button color="warn" (click)="navigateToOrders()">
+        <mat-icon>receipt</mat-icon>
+        Ver Órdenes
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading">
+    <p>Cargando estadísticas...</p>
+  </div>
+</ng-template> 

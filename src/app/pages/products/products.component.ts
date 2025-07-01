@@ -1,0 +1,199 @@
+import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatCardModule } from "@angular/material/card";
+import { MatChipsModule } from "@angular/material/chips";
+import { ProductService, Product } from "../../core/services/product.service";
+import { CartService } from "../../core/services/cart.service";
+import { CategoryFilterComponent } from "../../shared/components/category-filter/category-filter.component";
+import { ProductSearchComponent } from "../../shared/components/product-search/product-search.component";
+import { AuthService } from "src/app/core/services/auth.service";
+import { Router } from "@angular/router";
+
+@Component({
+  selector: "app-products",
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
+    MatCardModule,
+    MatChipsModule,
+    CategoryFilterComponent,
+    ProductSearchComponent,
+  ],
+  templateUrl: "./products.component.html",
+  styleUrls: ["./products.component.css"],
+})
+export class ProductsComponent implements OnInit {
+  products: Product[] = [];
+  filteredProducts: Product[] = [];
+  loading: boolean = true;
+  error: string | null = null;
+  addingToCart: { [productId: number]: boolean } = {};
+
+  // Filter states
+  selectedCategory: number | null = null;
+  selectedSubcategory: number | null = null;
+  searchQuery: string = "";
+  isSearchActive: boolean = false;
+
+  constructor(
+    private authService: AuthService,
+    private productService: ProductService,
+    private cartService: CartService,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
+    this.loading = true;
+    this.error = null;
+
+    this.productService.getProducts().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.products = response.data;
+          this.filteredProducts = [...this.products];
+        } else {
+          this.error = response.message || "Error al cargar los productos";
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = "Error al conectar con el servidor";
+        this.loading = false;
+        console.error("Error loading products:", err);
+      },
+    });
+  }
+
+  onCategorySelected(filter: {
+    categoryId: number;
+    subcategoryId?: number;
+  }): void {
+    this.selectedCategory = filter.categoryId;
+    this.selectedSubcategory = filter.subcategoryId || null;
+    this.isSearchActive = false;
+
+    this.loadProductsByCategory(filter.categoryId, filter.subcategoryId);
+  }
+
+  onCategoryFilterCleared(): void {
+    this.selectedCategory = null;
+    this.selectedSubcategory = null;
+    this.isSearchActive = false;
+    this.filteredProducts = [...this.products];
+  }
+
+  onSearchResults(products: Product[]): void {
+    this.filteredProducts = products;
+    this.isSearchActive = true;
+  }
+
+  onSearchCleared(): void {
+    if (!this.selectedCategory) {
+      this.filteredProducts = [...this.products];
+    }
+    this.isSearchActive = false;
+  }
+
+  loadProductsByCategory(categoryId: number, subcategoryId?: number): void {
+    this.loading = true;
+    this.error = null;
+
+    this.productService
+      .getProductsByCategory(categoryId, subcategoryId)
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.filteredProducts = response.data;
+          } else {
+            this.error =
+              response.message || "Error al cargar productos de la categoría";
+            this.filteredProducts = [];
+          }
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = "Error al conectar con el servidor";
+          this.filteredProducts = [];
+          this.loading = false;
+          console.error("Error loading products by category:", err);
+        },
+      });
+  }
+
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  addToCart(product: Product): void {
+    if (!this.isAuthenticated()) {
+      this.snackBar.open(
+        "Debe Iniciar Sesion o registrarse previamente",
+        "Cerrar",
+        {
+          duration: 3000,
+          horizontalPosition: "center",
+          verticalPosition: "top",
+        }
+      );
+
+      this.router.navigate(["/login"]);
+    }
+
+    this.addingToCart[product.id] = true;
+
+    this.cartService.addToCart(product.id, 1).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.snackBar.open(`${product.name} agregado al carrito`, "Cerrar", {
+            duration: 3000,
+            horizontalPosition: "center",
+            verticalPosition: "bottom",
+          });
+        } else {
+          this.snackBar.open(
+            response.message || "Error al agregar al carrito",
+            "Cerrar",
+            {
+              duration: 3000,
+              horizontalPosition: "center",
+              verticalPosition: "bottom",
+            }
+          );
+        }
+        this.addingToCart[product.id] = false;
+      },
+      error: (error) => {
+        console.error("Error adding to cart:", error);
+        this.snackBar.open("Error al agregar al carrito", "Cerrar", {
+          duration: 3000,
+          horizontalPosition: "center",
+          verticalPosition: "bottom",
+        });
+        this.addingToCart[product.id] = false;
+      },
+    });
+  }
+
+  isAddingToCart(productId: number): boolean {
+    return this.addingToCart[productId] || false;
+  }
+
+  getActiveFiltersCount(): number {
+    let count = 0;
+    if (this.selectedCategory) count++;
+    if (this.selectedSubcategory) count++;
+    if (this.isSearchActive) count++;
+    return count;
+  }
+}

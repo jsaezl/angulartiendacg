@@ -1,0 +1,69 @@
+<div class="category-filter-container">
+  <mat-card class="category-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>category</mat-icon>
+        Categorías
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="loading" class="loading">
+        <p>Cargando categorías...</p>
+      </div>
+
+      <div *ngIf="error" class="error">
+        <p>{{ error }}</p>
+        <button mat-button (click)="loadCategories()">Reintentar</button>
+      </div>
+
+      <div *ngIf="!loading && !error" class="categories-list">
+        <div class="clear-filter" *ngIf="selectedCategory">
+          <button mat-chip (click)="onClearFilter()" color="primary">
+            <mat-icon>clear</mat-icon>
+            Limpiar filtros
+          </button>
+        </div>
+
+        <mat-expansion-panel
+          *ngFor="let category of categories"
+          class="category-panel"
+        >
+          <mat-expansion-panel-header
+            [class.selected]="isCategorySelected(category.id)"
+            (click)="onCategorySelect(category.id)"
+          >
+            <mat-panel-title>
+              <mat-icon>{{ getCategoryIcon(category.name) }}</mat-icon>
+              {{ category.name }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div
+            class="subcategories-container"
+            *ngIf="category.subcategories && category.subcategories.length > 0"
+          >
+            <div
+              class="subcategory-item"
+              *ngFor="let subcategory of category.subcategories"
+              [class.selected]="isSubcategorySelected(subcategory.id)"
+              (click)="onSubcategorySelect(subcategory.id)"
+            >
+              <mat-icon>subdirectory_arrow_right</mat-icon>
+              <span>{{ subcategory.name }}</span>
+            </div>
+          </div>
+
+          <div
+            *ngIf="
+              !category.subcategories || category.subcategories.length === 0
+            "
+            class="no-subcategories"
+          >
+            <p>No hay subcategorías disponibles</p>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,68 @@
+<div class="search-container">
+  <mat-card class="search-card">
+    <mat-card-content>
+      <div class="search-input-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>
+            <mat-icon>search</mat-icon>
+            Buscar productos...
+          </mat-label>
+          <input 
+            matInput 
+            [formControl]="searchControl"
+            placeholder="Escribe el nombre del producto..."
+            (keyup.enter)="onSearch()"
+            autocomplete="off">
+          <mat-icon matSuffix *ngIf="isSearching" class="spinner">hourglass_empty</mat-icon>
+          <button 
+            *ngIf="searchControl.value" 
+            matSuffix 
+            mat-icon-button 
+            (click)="onClearSearch()"
+            aria-label="Limpiar búsqueda">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+        
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="onSearch()"
+          [disabled]="!searchControl.value || searchControl.value.length < 2"
+          class="search-button">
+          <mat-icon>search</mat-icon>
+          Buscar
+        </button>
+      </div>
+
+      <!-- Autocomplete dropdown -->
+      <mat-autocomplete 
+        #auto="matAutocomplete" 
+        [displayWith]="displayFn"
+        class="search-autocomplete">
+        <mat-option 
+          *ngFor="let product of filteredProducts | async" 
+          [value]="product"
+          class="search-option">
+          <div class="option-content">
+            <img [src]="getProductImage(product)" [alt]="product.name" class="option-image">
+            <div class="option-details">
+              <div class="option-name">{{ product.name }}</div>
+              <div class="option-price">${{ product.price.toFixed(2) }}</div>
+            </div>
+          </div>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Search results summary -->
+  <div *ngIf="searchResultsList.length > 0" class="search-results-summary">
+    <p>Se encontraron {{ searchResultsList.length }} producto(s)</p>
+  </div>
+
+  <div *ngIf="searchControl.value && searchControl.value.length >= 2 && searchResultsList.length === 0 && !isSearching" class="no-results">
+    <mat-icon>search_off</mat-icon>
+    <p>No se encontraron productos que coincidan con "{{ searchControl.value }}"</p>
+  </div>
+</div> 

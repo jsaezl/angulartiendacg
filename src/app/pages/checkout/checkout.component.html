@@ -1,0 +1,218 @@
+<div class="checkout-container">
+  <div class="checkout-header">
+    <h2>Finalizar Compra</h2>
+    <button mat-button (click)="backToCart()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+      Volver al Carrito
+    </button>
+  </div>
+
+  <div *ngIf="loading()" class="loading">
+    <p>Cargando información del carrito...</p>
+  </div>
+
+  <div *ngIf="!loading() && cartItems().length > 0" class="checkout-content">
+    <div class="checkout-grid">
+      <!-- Formulario de Envío -->
+      <div class="shipping-form">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>local_shipping</mat-icon>
+              Información de Envío
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Nombre Completo</mat-label>
+                  <input
+                    matInput
+                    formControlName="customerName"
+                    placeholder="Ingrese su nombre completo"
+                  />
+                  <mat-error *ngIf="checkoutForm.get('customerName')?.invalid">
+                    {{ getErrorMessage("customerName") }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Email</mat-label>
+                  <input
+                    matInput
+                    formControlName="customerEmail"
+                    type="email"
+                    placeholder="ejemplo@email.com"
+                  />
+                  <mat-error *ngIf="checkoutForm.get('customerEmail')?.invalid">
+                    {{ getErrorMessage("customerEmail") }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Teléfono</mat-label>
+                  <input
+                    matInput
+                    formControlName="customerPhone"
+                    placeholder="+1234567890"
+                  />
+                  <mat-error *ngIf="checkoutForm.get('customerPhone')?.invalid">
+                    {{ getErrorMessage("customerPhone") }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row two-columns">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Region</mat-label>
+                  <mat-select
+                    formControlName="regionId"
+                    [disabled]="loadingRegiones"
+                  >
+                    <mat-option *ngIf="loadingRegiones" value="" disabled>
+                      <mat-spinner diameter="20"></mat-spinner>
+                      Cargando Regiones...
+                    </mat-option>
+                    <mat-option
+                      *ngFor="let region of regiones"
+                      [value]="region.id"
+                    >
+                      {{ region.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error
+                    *ngIf="checkoutForm.get('regionId')?.hasError('required')"
+                  >
+                    La region es requerida
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Comuna</mat-label>
+                  <mat-select
+                    formControlName="comunaId"
+                    [disabled]="loadingComunas || comunas.length === 0"
+                  >
+                    <mat-option *ngIf="loadingComunas" value="" disabled>
+                      <mat-spinner diameter="20"></mat-spinner>
+                      Cargando Comunas...
+                    </mat-option>
+                    <mat-option
+                      *ngIf="!loadingComunas && comunas.length === 0"
+                      value=""
+                      disabled
+                    >
+                      Seleccione una region primero
+                    </mat-option>
+                    <mat-option
+                      *ngFor="let comuna of comunas"
+                      [value]="comuna.id"
+                    >
+                      {{ comuna.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Dirección de Envío</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="shippingAddress"
+                    rows="3"
+                    placeholder="Calle, número, apartamento, etc."
+                  ></textarea>
+                  <mat-error
+                    *ngIf="checkoutForm.get('shippingAddress')?.invalid"
+                  >
+                    {{ getErrorMessage("shippingAddress") }}
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Resumen de la Orden -->
+      <div class="order-summary">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>receipt</mat-icon>
+              Resumen de la Orden
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="order-items">
+              <h4>Productos:</h4>
+              <div class="item-list">
+                <div *ngFor="let item of cartItems()" class="order-item">
+                  <div class="item-info">
+                    <span class="item-name">{{ item.productName }}</span>
+                    <span class="item-quantity">x{{ item.quantity }}</span>
+                  </div>
+                  <div class="item-price">
+                    <span class="unit-price"
+                      >${{ item.unitPrice.toFixed(2) }} c/u</span
+                    >
+                    <span class="total-price"
+                      >${{ item.totalPrice.toFixed(2) }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="order-total">
+              <div class="total-row">
+                <span>Subtotal:</span>
+                <span>${{ cartTotal().toFixed(2) }}</span>
+              </div>
+              <div class="total-row">
+                <span>Envío:</span>
+                <span>Gratis</span>
+              </div>
+              <div class="total-row final-total">
+                <span>Total:</span>
+                <span>${{ cartTotal().toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <div class="checkout-actions">
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="onSubmit()"
+                [disabled]="checkoutForm.invalid || processing()"
+                class="checkout-btn"
+              >
+                <mat-icon *ngIf="!processing()">payment</mat-icon>
+                <mat-icon *ngIf="processing()">hourglass_empty</mat-icon>
+                {{ processing() ? "Procesando..." : "Confirmar Pedido" }}
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading() && cartItems().length === 0" class="empty-cart">
+    <mat-icon class="empty-cart-icon">shopping_cart</mat-icon>
+    <h3>Tu carrito está vacío</h3>
+    <p>Agrega productos a tu carrito antes de proceder al checkout</p>
+    <button mat-raised-button color="primary" (click)="backToCart()">
+      <mat-icon>shopping_bag</mat-icon>
+      Volver al Carrito
+    </button>
+  </div>
+</div>

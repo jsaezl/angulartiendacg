@@ -1,0 +1,39 @@
+.product-dialog {
+  min-width: 400px;
+}
+
+.product-dialog h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .product-dialog {
+    min-width: 300px;
+  }
+} 
