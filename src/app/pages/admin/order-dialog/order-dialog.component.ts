@@ -11,21 +11,13 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSelectModule } from "@angular/material/select";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
-import { Product } from "../../../core/services/product.service";
 import { AdminService } from "../../../core/services/admin.service";
-import { Category, Subcategory } from "../../../core/models/category";
-import { CategoryService } from "src/app/core/services/category.service";
 import { Order } from "src/app/core/services/order.service";
+import { MatCardModule } from "@angular/material/card";
+import { MatChipsModule } from "@angular/material/chips";
 
 export interface OrderDialogData {
-  order?: Order;
+  orderId: number;
 }
 
 @Component({
@@ -40,8 +32,8 @@ export interface OrderDialogData {
     MatIconModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-    FormsModule,
-    ReactiveFormsModule,
+    MatCardModule,
+    MatChipsModule,
   ],
   templateUrl: "./order-dialog.component.html",
   styleUrls: ["./order-dialog.component.css"],
@@ -49,62 +41,79 @@ export interface OrderDialogData {
 export class OrderDialogComponent implements OnInit {
   // productForm: FormGroup;
   loading = false;
-  categories: Category[] = [];
-  subcategories: Subcategory[] = [];
-  loadingCategories = false;
-  loadingSubcategories = false;
+  order?: Order;
 
   constructor(
     private dialogRef: MatDialogRef<OrderDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: OrderDialogData,
-    private fb: FormBuilder,
-    private adminService: AdminService,
-    private categoryService: CategoryService
-  ) {
-    /* this.productForm = this.fb.group({
-      name: ["", [Validators.required]],
-      description: ["", [Validators.required]],
-      price: [0, [Validators.required, Validators.min(0)]],
-      stock: [0, [Validators.required, Validators.min(0)]],
-      keywords: [""],
-      categoryId: [null, [Validators.required]],
-      subcategoryId: [null],
-    }) */
-  }
+    private adminService: AdminService
+  ) {}
 
   ngOnInit(): void {
-    //this.loadCategories();
+    this.loadOrder();
   }
-  /* 
-  loadCategories(): void {
-    this.loadingCategories = true;
-    this.categoryService.getCategories().subscribe({
+
+  loadOrder(): void {
+    this.loading = true;
+    this.adminService.getOrder(this.data.orderId).subscribe({
       next: (response) => {
         if (response.success) {
-          this.categories = response.data;
-
-          if (
-            this.data.isEdit &&
-            this.data.product &&
-            this.productForm.value.categoryId
-          ) {
-            this.loadSubcategories(this.productForm.value.categoryId);
-          }
+          this.order = response.data;
         }
-        this.loadingCategories = false;
+        this.loading = false;
       },
       error: (error) => {
-        console.error("Error loading categories:", error);
-        this.loadingCategories = false;
+        console.error("Error loading order:", error);
+        this.loading = false;
       },
     });
-  } */
-
-  onSubmit(): void {
-    //   this.dialogRef.close(formValue);
   }
 
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  getStatusColor(status: string): string {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return "warn";
+      case "processing":
+        return "accent";
+      case "shipped":
+        return "primary";
+      case "delivered":
+        return "primary";
+      case "cancelled":
+        return "warn";
+      default:
+        return "primary";
+    }
+  }
+
+  getStatusText(status: string): string {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return "Pendiente";
+      case "processing":
+        return "Procesando";
+      case "shipped":
+        return "Enviado";
+      case "delivered":
+        return "Entregado";
+      case "cancelled":
+        return "Cancelado";
+      default:
+        return status;
+    }
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   }
 }

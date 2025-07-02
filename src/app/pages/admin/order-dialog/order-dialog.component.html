@@ -1,148 +1,89 @@
-<div class="product-dialog">
+<div class="order-dialog">
   <h2 mat-dialog-title>
-    <mat-icon>{{ "edit" }}</mat-icon>
-    Producto
+    <mat-icon>flare</mat-icon>
+    Detalle Order
   </h2>
-  <!-- 
-  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <mat-dialog-content>
-      <div class="form-fields">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre del Producto</mat-label>
-          <input
-            matInput
-            formControlName="name"
-            placeholder="Ingrese el nombre del producto"
-          />
-          <mat-error *ngIf="productForm.get('name')?.hasError('required')">
-            El nombre es requerido
-          </mat-error>
-        </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Descripción</mat-label>
-          <textarea
-            matInput
-            formControlName="description"
-            rows="3"
-            placeholder="Ingrese la descripción del producto"
-          ></textarea>
-          <mat-error
-            *ngIf="productForm.get('description')?.hasError('required')"
-          >
-            La descripción es requerida
-          </mat-error>
-        </mat-form-field>
+  <mat-dialog-content>
+    <div *ngIf="loading" class="loading">
+      <p>Cargando órdenes...</p>
+    </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Categoría</mat-label>
-          <mat-select
-            formControlName="categoryId"
-            [disabled]="loadingCategories"
-          >
-            <mat-option *ngIf="loadingCategories" value="" disabled>
-              <mat-spinner diameter="20"></mat-spinner>
-              Cargando categorías...
-            </mat-option>
-            <mat-option
-              *ngFor="let category of categories"
-              [value]="category.id"
-            >
-              {{ category.name }}
-            </mat-option>
-          </mat-select>
-          <mat-error
-            *ngIf="productForm.get('categoryId')?.hasError('required')"
-          >
-            La categoría es requerida
-          </mat-error>
-        </mat-form-field>
+    <div *ngIf="!loading && order != null" class="orders-list">
+      <mat-card class="order-card">
+        <mat-card-header>
+          <mat-card-title> Orden #{{ order.id }} </mat-card-title>
+          <mat-card-subtitle>
+            {{ formatDate(order.orderDate) }}
+          </mat-card-subtitle>
+          <div class="order-status">
+            <mat-chip [color]="getStatusColor(order.status)" selected>
+              {{ getStatusText(order.status) }}
+            </mat-chip>
+          </div>
+        </mat-card-header>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Subcategoría</mat-label>
-          <mat-select
-            formControlName="subcategoryId"
-            [disabled]="loadingSubcategories || subcategories.length === 0"
-          >
-            <mat-option *ngIf="loadingSubcategories" value="" disabled>
-              <mat-spinner diameter="20"></mat-spinner>
-              Cargando subcategorías...
-            </mat-option>
-            <mat-option
-              *ngIf="!loadingSubcategories && subcategories.length === 0"
-              value=""
-              disabled
-            >
-              Seleccione una categoría primero
-            </mat-option>
-            <mat-option
-              *ngFor="let subcategory of subcategories"
-              [value]="subcategory.id"
-            >
-              {{ subcategory.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <mat-card-content>
+          <div class="order-details">
+            <div class="order-info">
+              <p><strong>Total:</strong> ${{ order.totalAmount.toFixed(2) }}</p>
+              <p *ngIf="order.customerName">
+                <strong>Cliente:</strong> {{ order.customerName }}
+              </p>
+              <p *ngIf="order.customerPhone">
+                <strong>Teléfono:</strong> {{ order.customerPhone }}
+              </p>
+              <div
+                *ngIf="
+                  order.shippingAddress ||
+                  order.city ||
+                  order.postalCode ||
+                  order.country
+                "
+                class="shipping-info"
+              >
+                <p><strong>Dirección de Envío:</strong></p>
+                <p *ngIf="order.shippingAddress">{{ order.shippingAddress }}</p>
+                <p *ngIf="order.city || order.postalCode || order.country">
+                  {{ order.city
+                  }}{{
+                    order.city && (order.postalCode || order.country)
+                      ? ", "
+                      : ""
+                  }}
+                  {{ order.postalCode
+                  }}{{ order.postalCode && order.country ? ", " : "" }}
+                  {{ order.country }}
+                </p>
+              </div>
+            </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Precio</mat-label>
-          <input
-            matInput
-            type="number"
-            formControlName="price"
-            placeholder="0.00"
-            min="0"
-            step="0.01"
-          />
-          <span matPrefix>$&nbsp;</span>
-          <mat-error *ngIf="productForm.get('price')?.hasError('required')">
-            El precio es requerido
-          </mat-error>
-          <mat-error *ngIf="productForm.get('price')?.hasError('min')">
-            El precio debe ser mayor a 0
-          </mat-error>
-        </mat-form-field>
+            <div class="order-items">
+              <h4>Productos:</h4>
+              <div class="item-list">
+                <div *ngFor="let item of order.orderItems" class="order-item">
+                  <div class="item-info">
+                    <span class="item-name">{{ item.productName }}</span>
+                    <span class="item-quantity">x {{ item.quantity }}</span>
+                  </div>
+                  <div class="item-price">
+                    <span class="unit-price"
+                      >${{ item.unitPrice.toFixed(2) }} c/u</span
+                    >
+                    <span class="total-price"
+                      >${{ item.totalPrice.toFixed(2) }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-dialog-content>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Stock</mat-label>
-          <input
-            matInput
-            type="number"
-            formControlName="stock"
-            placeholder="0"
-            min="0"
-          />
-          <mat-error *ngIf="productForm.get('stock')?.hasError('required')">
-            El stock es requerido
-          </mat-error>
-          <mat-error *ngIf="productForm.get('stock')?.hasError('min')">
-            El stock debe ser mayor o igual a 0
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Keywords</mat-label>
-          <textarea
-            matInput
-            formControlName="keywords"
-            rows="3"
-            placeholder="Ingrese keywords de busqueda"
-          ></textarea>
-        </mat-form-field>
-      </div>
-    </mat-dialog-content>
-
-    <mat-dialog-actions align="end">
-      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="productForm.invalid || loading"
-      >
-        <mat-icon *ngIf="loading" class="spinner">hourglass_empty</mat-icon>
-        {{ data.isEdit ? "Actualizar" : "Crear" }}
-      </button>
-    </mat-dialog-actions>
-  </form> -->
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Close</button>
+  </mat-dialog-actions>
 </div>

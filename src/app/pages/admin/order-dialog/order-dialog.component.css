@@ -1,39 +1,127 @@
-.product-dialog {
-  min-width: 400px;
-}
+.order-dialog {
+  padding: 1rem;
+  max-width: 700px;
 
-.product-dialog h2 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #333;
-}
+  h2[mat-dialog-title] {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
 
-.form-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.spinner {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
+    mat-icon {
+      color: #3f51b5;
+    }
   }
-  to {
-    transform: rotate(360deg);
+
+  .loading {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #888;
+    padding: 2rem;
+  }
+
+  .orders-list {
+    margin-top: 1rem;
+  }
+
+  .order-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .order-status {
+      margin-left: auto;
+      padding-top: 0.5rem;
+
+      mat-chip {
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
+    }
+
+    .order-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 1rem;
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .order-info {
+        flex: 1;
+        p {
+          margin: 0.3rem 0;
+        }
+
+        .shipping-info {
+          margin-top: 0.8rem;
+
+          p:first-child {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+          }
+        }
+      }
+
+      .order-items {
+        flex: 1;
+
+        h4 {
+          margin-bottom: 0.5rem;
+        }
+
+        .item-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.6rem;
+
+          .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.4rem;
+
+            .item-info {
+              display: flex;
+              flex-direction: column;
+
+              .item-name {
+                font-weight: 500;
+              }
+
+              .item-quantity {
+                font-size: 0.9rem;
+                color: #666;
+              }
+            }
+
+            .item-price {
+              text-align: right;
+              font-size: 0.9rem;
+
+              .unit-price {
+                color: #666;
+              }
+
+              .total-price {
+                font-weight: bold;
+                display: block;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  mat-dialog-actions {
+    margin-top: 1rem;
+
+    button[mat-button] {
+      font-weight: 500;
+    }
   }
 }
-
-@media (max-width: 600px) {
-  .product-dialog {
-    min-width: 300px;
-  }
-} 

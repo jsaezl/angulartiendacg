@@ -137,12 +137,9 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   viewOrderDetails(order: Order): void {
-    // You can implement a dialog to show order details
-    console.log("Order details:", order);
-
     const dialogRef = this.dialog.open(OrderDialogComponent, {
-      width: "500px",
-      data: { order },
+      width: "600px",
+      data: { orderId: order.id },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
