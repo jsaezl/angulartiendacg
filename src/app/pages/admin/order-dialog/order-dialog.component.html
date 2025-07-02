@@ -1,0 +1,148 @@
+<div class="product-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>{{ "edit" }}</mat-icon>
+    Producto
+  </h2>
+  <!-- 
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+      <div class="form-fields">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nombre del Producto</mat-label>
+          <input
+            matInput
+            formControlName="name"
+            placeholder="Ingrese el nombre del producto"
+          />
+          <mat-error *ngIf="productForm.get('name')?.hasError('required')">
+            El nombre es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descripción</mat-label>
+          <textarea
+            matInput
+            formControlName="description"
+            rows="3"
+            placeholder="Ingrese la descripción del producto"
+          ></textarea>
+          <mat-error
+            *ngIf="productForm.get('description')?.hasError('required')"
+          >
+            La descripción es requerida
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Categoría</mat-label>
+          <mat-select
+            formControlName="categoryId"
+            [disabled]="loadingCategories"
+          >
+            <mat-option *ngIf="loadingCategories" value="" disabled>
+              <mat-spinner diameter="20"></mat-spinner>
+              Cargando categorías...
+            </mat-option>
+            <mat-option
+              *ngFor="let category of categories"
+              [value]="category.id"
+            >
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="productForm.get('categoryId')?.hasError('required')"
+          >
+            La categoría es requerida
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Subcategoría</mat-label>
+          <mat-select
+            formControlName="subcategoryId"
+            [disabled]="loadingSubcategories || subcategories.length === 0"
+          >
+            <mat-option *ngIf="loadingSubcategories" value="" disabled>
+              <mat-spinner diameter="20"></mat-spinner>
+              Cargando subcategorías...
+            </mat-option>
+            <mat-option
+              *ngIf="!loadingSubcategories && subcategories.length === 0"
+              value=""
+              disabled
+            >
+              Seleccione una categoría primero
+            </mat-option>
+            <mat-option
+              *ngFor="let subcategory of subcategories"
+              [value]="subcategory.id"
+            >
+              {{ subcategory.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Precio</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="price"
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+          />
+          <span matPrefix>$&nbsp;</span>
+          <mat-error *ngIf="productForm.get('price')?.hasError('required')">
+            El precio es requerido
+          </mat-error>
+          <mat-error *ngIf="productForm.get('price')?.hasError('min')">
+            El precio debe ser mayor a 0
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Stock</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="stock"
+            placeholder="0"
+            min="0"
+          />
+          <mat-error *ngIf="productForm.get('stock')?.hasError('required')">
+            El stock es requerido
+          </mat-error>
+          <mat-error *ngIf="productForm.get('stock')?.hasError('min')">
+            El stock debe ser mayor o igual a 0
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Keywords</mat-label>
+          <textarea
+            matInput
+            formControlName="keywords"
+            rows="3"
+            placeholder="Ingrese keywords de busqueda"
+          ></textarea>
+        </mat-form-field>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="productForm.invalid || loading"
+      >
+        <mat-icon *ngIf="loading" class="spinner">hourglass_empty</mat-icon>
+        {{ data.isEdit ? "Actualizar" : "Crear" }}
+      </button>
+    </mat-dialog-actions>
+  </form> -->
+</div>

@@ -18,6 +18,7 @@ import {
   UpdateOrderStatusRequest,
 } from "../../../core/services/admin.service";
 import { Order } from "../../../core/services/order.service";
+import { OrderDialogComponent } from "../order-dialog/order-dialog.component";
 
 @Component({
   selector: "app-admin-orders",
@@ -138,6 +139,17 @@ export class AdminOrdersComponent implements OnInit {
   viewOrderDetails(order: Order): void {
     // You can implement a dialog to show order details
     console.log("Order details:", order);
+
+    const dialogRef = this.dialog.open(OrderDialogComponent, {
+      width: "500px",
+      data: { order },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log("Order details closed");
+      }
+    });
   }
 
   getStatusColor(status: string): string {
