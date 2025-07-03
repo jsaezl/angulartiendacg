@@ -8,19 +8,23 @@ mat-toolbar {
   flex: 0 0 auto;
   padding: 0 24px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
 }
 
 mat-toolbar::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
   pointer-events: none;
 }
 
@@ -34,14 +38,14 @@ mat-toolbar::before {
   padding: 8px 16px;
   border-radius: 12px;
   transition: all 0.3s ease;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
 }
 
 .logo-container:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .logo {
@@ -49,13 +53,13 @@ mat-toolbar::before {
   height: 60px;
   border-radius: 12px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  border: 2px solid rgba(255,255,255,0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .logo:hover {
   transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .brand-name {
@@ -63,8 +67,8 @@ mat-toolbar::before {
   font-weight: 700;
   letter-spacing: 1px;
   color: white;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .spacer {
@@ -91,7 +95,7 @@ mat-toolbar::before {
 .nav-links button:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .nav-links button[mat-button] {
@@ -104,38 +108,38 @@ mat-toolbar::before {
   height: 48px;
   margin: 0 4px;
 }
-
+/*
 router-outlet {
-  flex: 1 1 auto;
+   flex: 1 1 
 }
-
+auto;*/
 /* Responsive design */
 @media (max-width: 768px) {
   mat-toolbar {
     padding: 0 16px;
   }
-  
+
   .brand-name {
     font-size: 1.4rem;
   }
-  
+
   .logo {
     width: 48px;
     height: 48px;
   }
-  
+
   .nav-links {
     gap: 8px;
   }
-  
+
   .nav-links button[mat-button] {
     padding: 6px 12px;
   }
-  
+
   .nav-links button[mat-button] span {
     display: none;
   }
-  
+
   .logo-container {
     padding: 6px 12px;
     gap: 12px;
@@ -146,14 +150,14 @@ router-outlet {
   .brand-name {
     font-size: 1.2rem;
   }
-  
+
   .logo {
     width: 40px;
     height: 40px;
   }
-  
+
   .logo-container {
     padding: 4px 8px;
     gap: 8px;
   }
-} 
+}

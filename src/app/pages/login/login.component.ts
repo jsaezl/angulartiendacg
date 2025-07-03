@@ -8,6 +8,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthService } from "../../core/services/auth.service";
+import { CartService } from "src/app/core/services/cart.service";
 
 @Component({
   selector: "app-login",
@@ -19,7 +20,7 @@ import { AuthService } from "../../core/services/auth.service";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.css"],
@@ -34,6 +35,7 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
+    private cartService: CartService,
     private router: Router,
     private snackBar: MatSnackBar
   ) {}
@@ -45,9 +47,11 @@ export class LoginComponent {
         this.snackBar.open("Inicio de sesión exitoso", "Cerrar", {
           duration: 3000,
           horizontalPosition: "center",
-          verticalPosition: "top"
+          verticalPosition: "top",
         });
-        
+
+        this.cartService.refreshCart();
+
         if (response.data.role === "Admin") {
           this.router.navigate(["/admin"]);
         } else {
@@ -60,13 +64,13 @@ export class LoginComponent {
         this.snackBar.open(errorMessage, "Cerrar", {
           duration: 5000,
           horizontalPosition: "center",
-          verticalPosition: "top"
+          verticalPosition: "top",
         });
         this.loading = false;
       },
       complete: () => {
         this.loading = false;
-      }
+      },
     });
   }
 }

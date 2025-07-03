@@ -33,6 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
   cartCount: number = 0;
   usuario: string = "";
   private cartSubscription?: Subscription;
+  private userSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -41,7 +42,12 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.usuario = this.authService.getCurrentUser()?.username ?? "";
+    //    this.usuario = this.authService.getCurrentUser()?.username ?? "";
+
+    this.userSubscription = this.authService.currentUser$.subscribe((user) => {
+      this.usuario = user?.username ?? "";
+    });
+
     this.cartSubscription = this.cartService.cartCount$.subscribe((count) => {
       this.cartCount = count;
     });
@@ -49,6 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.cartSubscription?.unsubscribe();
+    this.userSubscription?.unsubscribe();
   }
 
   isAuthenticated(): boolean {
