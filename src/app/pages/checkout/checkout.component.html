@@ -73,6 +73,7 @@
                   <mat-select
                     formControlName="regionId"
                     [disabled]="loadingRegiones"
+                    (selectionChange)="onRegionChange($event.value)"
                   >
                     <mat-option *ngIf="loadingRegiones" value="" disabled>
                       <mat-spinner diameter="20"></mat-spinner>

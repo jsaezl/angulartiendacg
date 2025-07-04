@@ -70,12 +70,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private cartSubscription?: Subscription;
 
   ngOnInit(): void {
-    this.initForm();
+    this.loadRegiones();
     this.loadCartItems();
     this.cartSubscription = this.cartService.cartItems$.subscribe((items) => {
       this.cartItems.set(items);
       this.calculateTotal();
     });
+    this.initForm();
   }
 
   ngOnDestroy(): void {
@@ -84,7 +85,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   initForm(): void {
     const currentUser = this.authService.getCurrentUser();
-    this.loadRegiones();
 
     this.checkoutForm = this.fb.group({
       customerName: [
@@ -100,49 +100,96 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         [Validators.required, Validators.pattern(/^\+?[\d\s\-\(\)]+$/)],
       ],
       shippingAddress: ["", [Validators.required, Validators.minLength(10)]],
-      regionId: [7, [Validators.required]],
+      regionId: [null, [Validators.required]],
       comunaId: [null, [Validators.required]],
     });
 
-    let orderHeader = this.orderService
+    // Listen for region changes
+    this.checkoutForm.get("regionId")?.valueChanges.subscribe((regionId) => {
+      console.log("Region changed to:", regionId);
+
+      this.checkoutForm.get("comunaId")?.setValue(null);
+      this.comunas = [];
+
+      if (regionId) {
+        // Check if regions are loaded before trying to load comunas
+        if (this.regiones && this.regiones.length > 0) {
+          this.loadComunas(regionId);
+        } else {
+          console.log(
+            "Regions not loaded yet, will load comunas when available"
+          );
+          // Wait for regions to be loaded
+          const checkRegions = setInterval(() => {
+            if (this.regiones && this.regiones.length > 0) {
+              clearInterval(checkRegions);
+              this.loadComunas(regionId);
+            }
+          }, 100);
+        }
+      }
+    });
+
+    // Load user order header data
+    this.orderService
       .getUserOrderHeaderDefault(currentUser?.username || "")
       .subscribe({
         next: (response) => {
           if (response.success) {
-            if (response.data == null) return;
+            if (response.data == null) {
+              // Set default region and load comunas
+              this.checkoutForm.patchValue({
+                regionId: 7,
+              });
+
+              // Wait for regions to be loaded before loading comunas
+              this.waitForRegions(() => {
+                this.loadComunas(7);
+              });
+              return;
+            }
+
+            // Set form values from user data
             this.checkoutForm.patchValue({
               customerName: response.data.customerName,
-            });
-            this.checkoutForm.patchValue({
               customerPhone: response.data.customerPhone,
-            });
-            this.checkoutForm.patchValue({
               shippingAddress: response.data.shippingAddress,
-            });
-            this.checkoutForm.patchValue({
               regionId: response.data.regionId,
-            });
-            this.checkoutForm.patchValue({
               comunaId: response.data.comunaId,
             });
+
+            // Load comunas for the selected region
+            if (response.data.regionId) {
+              this.waitForRegions(() => {
+                this.loadComunas(response.data.regionId);
+              });
+            }
           }
         },
         error: (error) => {
           console.error("Error loading order header:", error);
         },
       });
+  }
 
-    // Listen for category changes
-    this.checkoutForm.get("regionId")?.valueChanges.subscribe((regionId) => {
-      console.log("ENTRE CAMBIO");
+  private waitForRegions(callback: () => void): void {
+    if (this.regiones && this.regiones.length > 0) {
+      callback();
+    } else {
+      setTimeout(() => this.waitForRegions(callback), 100);
+    }
+  }
 
-      this.checkoutForm.get("comunaId")?.setValue(null);
-      this.comunas = [];
+  onRegionChange(regionId: number): void {
+    console.log("Region changed from template:", regionId);
+    this.checkoutForm.get("comunaId")?.setValue(null);
+    this.comunas = [];
 
-      if (regionId) {
+    if (regionId) {
+      this.waitForRegions(() => {
         this.loadComunas(regionId);
-      }
-    });
+      });
+    }
   }
 
   loadCartItems(): void {
@@ -181,12 +228,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response.success) {
           this.regiones = response.data;
-          this.loadComunas(7); //CARGA INICIAL OR DEFECTO
         }
         this.loadingRegiones = false;
       },
       error: (error) => {
-        console.error("Error loading categories:", error);
+        console.error("Error loading regions:", error);
         this.loadingRegiones = false;
       },
     });
@@ -194,9 +240,22 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   loadComunas(regionId: number): void {
     this.loadingComunas = true;
-    var categoryselected = this.regiones.find((m) => m.id == regionId);
-    if (categoryselected != null) {
-      this.comunas = categoryselected.comunas || [];
+
+    // Check if regions are loaded before trying to find the region
+    if (!this.regiones || this.regiones.length === 0) {
+      console.log("Regions not loaded yet, skipping comunas");
+      this.comunas = [];
+      this.loadingComunas = false;
+      return;
+    }
+
+    const regionSelected = this.regiones.find((m) => m.id == regionId);
+    if (regionSelected != null) {
+      console.log("Region found, loading comunas:", regionSelected.comunas);
+      this.comunas = regionSelected.comunas || [];
+    } else {
+      console.log("Region not found for ID:", regionId);
+      this.comunas = [];
     }
 
     this.loadingComunas = false;
@@ -275,6 +334,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               duration: 5000,
             }
           );
+
+          this.cartService.refreshCart();
           this.router.navigate(["/orders"]);
         } else {
           this.snackBar.open(
