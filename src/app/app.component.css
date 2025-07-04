@@ -161,3 +161,35 @@ auto;*/
     gap: 8px;
   }
 }
+
+.app-container {
+  height: 100vh;
+}
+
+.main-content {
+  padding: 16px;
+}
+
+.mobile-toggle {
+  display: none;
+}
+
+.mobile-sidenav {
+  width: 250px;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .mobile-toggle {
+    display: inline-flex;
+    margin-right: 12px;
+    color: white;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+}

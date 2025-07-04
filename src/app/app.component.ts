@@ -6,7 +6,9 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatBadgeModule } from "@angular/material/badge";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatListModule } from "@angular/material/list";
 import { AuthService } from "./core/services/auth.service";
 import { CartService } from "./core/services/cart.service";
 import { Subscription } from "rxjs";
@@ -24,6 +26,8 @@ import { Subscription } from "rxjs";
     MatBadgeModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatSidenavModule,
+    MatListModule,
   ],
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"],
