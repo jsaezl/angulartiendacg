@@ -1,6 +1,9 @@
 import { HttpInterceptorFn } from "@angular/common/http";
+import { inject } from "@angular/core";
+import { Router } from "@angular/router";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const router = inject(Router); // Necesario para redirigir
   let token: string | null = null;
 
   try {
@@ -8,6 +11,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     if (currentUserStr) {
       const currentUser = JSON.parse(currentUserStr);
       token = currentUser?.token || null;
+
+      // Verificar expiración del token
+      if (token && isTokenExpired(token)) {
+        console.warn("Token expirado. Redirigiendo a login.");
+        localStorage.removeItem("currentUser");
+        router.navigate(["/login"]);
+        return next(req); // opción: podrías cancelar petición con throwError
+      }
     }
   } catch (error) {
     console.error("Error parsing currentUser from localStorage:", error);
@@ -27,3 +38,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   //console.log("Request sin Authorization header:", req.url);
   return next(req);
 };
+
+// 🔍 Función para verificar si un token JWT está expirado
+function isTokenExpired(token: string): boolean {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const now = Math.floor(Date.now() / 1000);
+    return payload.exp < now;
+  } catch (e) {
+    console.error("Error al decodificar token:", e);
+    return true; // si no se puede decodificar, consideramos que está expirado
+  }
+}

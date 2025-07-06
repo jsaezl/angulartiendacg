@@ -1,127 +1,121 @@
 .order-dialog {
-  padding: 1rem;
   max-width: 700px;
+}
 
-  h2[mat-dialog-title] {
+.order-dialog h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #888;
+  padding: 2rem;
+}
+
+.orders-list {
+  margin-top: 1rem;
+}
+
+.order-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .order-status {
+    margin-left: auto;
+    padding-top: 0.5rem;
+
+    mat-chip {
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+  }
+
+  .order-details {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-
-    mat-icon {
-      color: #3f51b5;
-    }
-  }
-
-  .loading {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #888;
-    padding: 2rem;
-  }
-
-  .orders-list {
+    flex-direction: column;
+    gap: 1.5rem;
     margin-top: 1rem;
-  }
 
-  .order-card {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
 
-    .order-status {
-      margin-left: auto;
-      padding-top: 0.5rem;
+    .order-info {
+      flex: 1;
+      p {
+        margin: 0.3rem 0;
+      }
 
-      mat-chip {
-        font-weight: bold;
-        font-size: 0.9rem;
+      .shipping-info {
+        margin-top: 0.8rem;
+
+        p:first-child {
+          font-weight: bold;
+          margin-bottom: 0.3rem;
+        }
       }
     }
 
-    .order-details {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      margin-top: 1rem;
+    .order-items {
+      flex: 1;
 
-      @media (min-width: 768px) {
-        flex-direction: row;
-        justify-content: space-between;
+      h4 {
+        margin-bottom: 0.5rem;
       }
 
-      .order-info {
-        flex: 1;
-        p {
-          margin: 0.3rem 0;
-        }
+      .item-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
 
-        .shipping-info {
-          margin-top: 0.8rem;
-
-          p:first-child {
-            font-weight: bold;
-            margin-bottom: 0.3rem;
-          }
-        }
-      }
-
-      .order-items {
-        flex: 1;
-
-        h4 {
-          margin-bottom: 0.5rem;
-        }
-
-        .item-list {
+        .order-item {
           display: flex;
-          flex-direction: column;
-          gap: 0.6rem;
+          justify-content: space-between;
+          align-items: flex-start;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 0.4rem;
 
-          .order-item {
+          .item-info {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.4rem;
+            flex-direction: column;
 
-            .item-info {
-              display: flex;
-              flex-direction: column;
-
-              .item-name {
-                font-weight: 500;
-              }
-
-              .item-quantity {
-                font-size: 0.9rem;
-                color: #666;
-              }
+            .item-name {
+              font-weight: 500;
             }
 
-            .item-price {
-              text-align: right;
+            .item-quantity {
               font-size: 0.9rem;
+              color: #666;
+            }
+          }
 
-              .unit-price {
-                color: #666;
-              }
+          .item-price {
+            text-align: right;
+            font-size: 0.9rem;
 
-              .total-price {
-                font-weight: bold;
-                display: block;
-              }
+            .unit-price {
+              color: #666;
+            }
+
+            .total-price {
+              font-weight: bold;
+              display: block;
             }
           }
         }
       }
     }
   }
+}
 
-  mat-dialog-actions {
-    margin-top: 1rem;
+.mat-dialog-actions {
+  margin-top: 1rem;
 
-    button[mat-button] {
-      font-weight: 500;
-    }
+  button[mat-button] {
+    font-weight: 500;
   }
 }
