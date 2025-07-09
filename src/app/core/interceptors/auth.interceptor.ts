@@ -1,6 +1,7 @@
 import { HttpInterceptorFn } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { Router } from "@angular/router";
+import { Observable } from "rxjs";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router); // Necesario para redirigir
@@ -17,7 +18,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         console.warn("Token expirado. Redirigiendo a login.");
         localStorage.removeItem("currentUser");
         router.navigate(["/login"]);
-        return next(req); // opción: podrías cancelar petición con throwError
+        return new Observable(); // ⛔ Cancelar la solicitud
       }
     }
   } catch (error) {
