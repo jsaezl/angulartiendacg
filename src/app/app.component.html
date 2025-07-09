@@ -1,6 +1,12 @@
 <mat-sidenav-container class="app-container">
   <mat-sidenav #sidenav mode="over" class="mobile-sidenav">
     <mat-nav-list>
+      <a
+        href="https://wa.me/56951974509?text=Hola%20quiero%20más%20información"
+        target="_blank"
+      >
+        <img src="assets/ico/whatsapp.svg" alt="WhatsApp" width="24" />
+      </a>
       <a mat-list-item routerLink="/products-list" (click)="sidenav.close()"
         >Productos</a
       >
@@ -46,6 +52,10 @@
       <span class="spacer"></span>
 
       <div class="nav-links desktop-only" *ngIf="!isAuthenticated()">
+        <button (click)="openWhatsApp()">
+          <img src="assets/ico/whatsapp.svg" alt="WhatsApp" width="24" />
+        </button>
+
         <button mat-button routerLink="/login">
           <mat-icon>person</mat-icon>
           <span>Ir a Login</span>
@@ -57,6 +67,10 @@
       </div>
 
       <div class="nav-links desktop-only" *ngIf="isAuthenticated()">
+        <button (click)="openWhatsApp()">
+          <img src="assets/ico/whatsapp.svg" alt="WhatsApp" width="24" />
+        </button>
+
         <button mat-button routerLink="/login">
           <mat-icon>person</mat-icon>
           <span>{{ usuario }}</span>

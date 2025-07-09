@@ -6,15 +6,18 @@
         <mat-icon>shopping_bag</mat-icon>
         Nuestros Productos
       </h1>
-      <p class="page-subtitle">Descubre nuestra amplia selección de productos de alta calidad</p>
+      <p class="page-subtitle">
+        Descubre nuestra amplia selección de productos de alta calidad
+      </p>
     </div>
   </div>
 
   <!-- Search Section -->
   <div class="search-section">
-    <app-product-search 
+    <app-product-search
       (searchResults)="onSearchResults($event)"
-      (searchCleared)="onSearchCleared()">
+      (searchCleared)="onSearchCleared()"
+    >
     </app-product-search>
   </div>
 
@@ -24,7 +27,8 @@
     <aside class="sidebar">
       <app-category-filter
         (categorySelected)="onCategorySelected($event)"
-        (clearFilter)="onCategoryFilterCleared()">
+        (clearFilter)="onCategoryFilterCleared()"
+      >
       </app-category-filter>
     </aside>
 
@@ -77,7 +81,10 @@
         <div class="products-header">
           <h2>Productos Disponibles</h2>
           <p class="products-count">
-            {{ filteredProducts.length }} producto{{ filteredProducts.length !== 1 ? 's' : '' }} encontrado{{ filteredProducts.length !== 1 ? 's' : '' }}
+            {{ filteredProducts.length }} producto{{
+              filteredProducts.length !== 1 ? "s" : ""
+            }}
+            encontrado{{ filteredProducts.length !== 1 ? "s" : "" }}
           </p>
         </div>
 
@@ -87,7 +94,11 @@
               <mat-icon class="no-products-icon">inventory_2</mat-icon>
               <h3>No se encontraron productos</h3>
               <p>Intenta ajustar tus filtros de búsqueda o categorías</p>
-              <button mat-raised-button color="primary" (click)="onCategoryFilterCleared()">
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="onCategoryFilterCleared()"
+              >
                 <mat-icon>clear_all</mat-icon>
                 Limpiar filtros
               </button>
@@ -98,39 +109,62 @@
         <div class="products-grid" *ngIf="filteredProducts.length > 0">
           <div class="product-card" *ngFor="let product of filteredProducts">
             <div class="product-image-container">
-              <img [src]="'assets/images/' + product.id + '.jpg'" [alt]="product.name" class="product-image">
+              <img
+                [src]="'assets/images/' + product.id + '.jpg'"
+                [alt]="product.name"
+                class="product-image"
+              />
               <div class="product-overlay">
-                <button 
-                  mat-fab 
+                <button
+                  mat-fab
                   color="primary"
-                  (click)="addToCart(product)" 
+                  (click)="addToCart(product)"
                   [disabled]="isAddingToCart(product.id)"
-                  class="quick-add-btn">
-                  <mat-icon *ngIf="!isAddingToCart(product.id)">add_shopping_cart</mat-icon>
-                  <mat-icon *ngIf="isAddingToCart(product.id)" class="spinner">hourglass_empty</mat-icon>
+                  class="quick-add-btn"
+                >
+                  <mat-icon *ngIf="!isAddingToCart(product.id)"
+                    >add_shopping_cart</mat-icon
+                  >
+                  <mat-icon *ngIf="isAddingToCart(product.id)" class="spinner"
+                    >hourglass_empty</mat-icon
+                  >
                 </button>
               </div>
             </div>
-            
+
             <div class="product-info">
               <h3 class="product-name">{{ product.name }}</h3>
               <p class="product-description">{{ product.description }}</p>
               <div class="product-meta">
-                <span class="product-price">${{ product.price.toFixed(2) }}</span>
-                <span class="product-stock" [class.low-stock]="product.stock < 10">
+                <span class="product-price"
+                  >${{ product.price.toFixed(0) }}</span
+                >
+                <span
+                  class="product-stock"
+                  [class.low-stock]="product.stock < 10"
+                >
                   <mat-icon>inventory</mat-icon>
                   {{ product.stock }} en stock
                 </span>
               </div>
-              <button 
-                mat-raised-button 
+              <button
+                mat-raised-button
                 color="primary"
-                (click)="addToCart(product)" 
+                (click)="addToCart(product)"
                 [disabled]="isAddingToCart(product.id)"
-                class="add-to-cart-btn">
-                <mat-icon *ngIf="!isAddingToCart(product.id)">add_shopping_cart</mat-icon>
-                <mat-icon *ngIf="isAddingToCart(product.id)" class="spinner">hourglass_empty</mat-icon>
-                {{ isAddingToCart(product.id) ? 'Agregando...' : 'Agregar al Carrito' }}
+                class="add-to-cart-btn"
+              >
+                <mat-icon *ngIf="!isAddingToCart(product.id)"
+                  >add_shopping_cart</mat-icon
+                >
+                <mat-icon *ngIf="isAddingToCart(product.id)" class="spinner"
+                  >hourglass_empty</mat-icon
+                >
+                {{
+                  isAddingToCart(product.id)
+                    ? "Agregando..."
+                    : "Agregar al Carrito"
+                }}
               </button>
             </div>
           </div>
@@ -138,4 +172,4 @@
       </div>
     </main>
   </div>
-</div> 
+</div>

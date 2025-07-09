@@ -82,4 +82,11 @@ export class AppComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  openWhatsApp() {
+    window.open(
+      "https://wa.me/56951974509?text=Hola%2C%20quiero%20más%20información",
+      "_blank"
+    );
+  }
 }

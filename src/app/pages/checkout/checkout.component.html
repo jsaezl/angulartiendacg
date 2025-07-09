@@ -161,10 +161,10 @@
                   </div>
                   <div class="item-price">
                     <span class="unit-price"
-                      >${{ item.unitPrice.toFixed(2) }} c/u</span
+                      >${{ item.unitPrice.toFixed(0) }} c/u</span
                     >
                     <span class="total-price"
-                      >${{ item.totalPrice.toFixed(2) }}</span
+                      >${{ item.totalPrice.toFixed(0) }}</span
                     >
                   </div>
                 </div>
@@ -176,7 +176,7 @@
             <div class="order-total">
               <div class="total-row">
                 <span>Subtotal:</span>
-                <span>${{ cartTotal().toFixed(2) }}</span>
+                <span>${{ cartTotal().toFixed(0) }}</span>
               </div>
               <div class="total-row">
                 <span>Envío:</span>
@@ -184,7 +184,7 @@
               </div>
               <div class="total-row final-total">
                 <span>Total:</span>
-                <span>${{ cartTotal().toFixed(2) }}</span>
+                <span>${{ cartTotal().toFixed(0) }}</span>
               </div>
             </div>
 
