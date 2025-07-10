@@ -159,7 +159,10 @@
 
             <div class="product-info">
               <h3 class="product-name">{{ product.name }}</h3>
-              <p class="product-description">{{ product.description }}</p>
+              <p
+                class="product-description"
+                [innerHTML]="product.description"
+              ></p>
               <div class="product-meta">
                 <span class="product-price"
                   >${{ product.price.toFixed(0) }}</span

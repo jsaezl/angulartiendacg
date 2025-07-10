@@ -19,20 +19,15 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Descripción</mat-label>
-          <textarea
-            matInput
+        <div class="editor-container mat-elevation-z1">
+          <label class="mat-label">Contenido</label>
+          <angular-editor
             formControlName="description"
-            rows="3"
-            placeholder="Ingrese la descripción del producto"
-          ></textarea>
-          <mat-error
-            *ngIf="productForm.get('description')?.hasError('required')"
+            [config]="editorConfig"
+            class="custom-editor"
           >
-            La descripción es requerida
-          </mat-error>
-        </mat-form-field>
+          </angular-editor>
+        </div>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Categoría</mat-label>

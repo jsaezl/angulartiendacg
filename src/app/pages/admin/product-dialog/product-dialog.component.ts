@@ -22,6 +22,10 @@ import { Product } from "../../../core/services/product.service";
 import { AdminService } from "../../../core/services/admin.service";
 import { Category, Subcategory } from "../../../core/models/category";
 import { CategoryService } from "src/app/core/services/category.service";
+import {
+  AngularEditorConfig,
+  AngularEditorModule,
+} from "@kolkov/angular-editor";
 
 export interface ProductDialogData {
   product?: Product;
@@ -42,6 +46,7 @@ export interface ProductDialogData {
     MatProgressSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
+    AngularEditorModule,
   ],
   templateUrl: "./product-dialog.component.html",
   styleUrls: ["./product-dialog.component.css"],
@@ -71,6 +76,18 @@ export class ProductDialogComponent implements OnInit {
       subcategoryId: [null],
     });
   }
+
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: "200px",
+    minHeight: "0",
+    placeholder: "Escribe aquí...",
+    translate: "no",
+    defaultParagraphSeparator: "p",
+    defaultFontName: "Arial",
+    toolbarHiddenButtons: [["insertImage", "insertVideo"]],
+  };
 
   ngOnInit(): void {
     this.loadCategories();
