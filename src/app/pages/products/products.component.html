@@ -79,13 +79,38 @@
       <!-- Products Grid -->
       <div *ngIf="!loading && !error" class="products-content">
         <div class="products-header">
-          <h2>Productos Disponibles</h2>
-          <p class="products-count">
-            {{ filteredProducts.length }} producto{{
-              filteredProducts.length !== 1 ? "s" : ""
-            }}
-            encontrado{{ filteredProducts.length !== 1 ? "s" : "" }}
-          </p>
+          <div class="header-left">
+            <h2>Productos Disponibles</h2>
+            <p class="products-count">
+              {{ filteredProducts.length }} producto{{
+                filteredProducts.length !== 1 ? "s" : ""
+              }}
+              encontrado{{ filteredProducts.length !== 1 ? "s" : "" }}
+            </p>
+          </div>
+          <div class="sorting-controls">
+            <mat-form-field appearance="outline" class="sort-select">
+              <mat-label>Ordenar por</mat-label>
+              <mat-select [(value)]="sortBy" (selectionChange)="onSortChange()">
+                <mat-option value="name-asc">
+                  <mat-icon>sort_by_alpha</mat-icon>
+                  Nombre A-Z
+                </mat-option>
+                <mat-option value="name-desc">
+                  <mat-icon>sort_by_alpha</mat-icon>
+                  Nombre Z-A
+                </mat-option>
+                <mat-option value="price-asc">
+                  <mat-icon>trending_up</mat-icon>
+                  Precio: Menor a Mayor
+                </mat-option>
+                <mat-option value="price-desc">
+                  <mat-icon>trending_down</mat-icon>
+                  Precio: Mayor a Menor
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
         </div>
 
         <div *ngIf="filteredProducts.length === 0" class="no-products">

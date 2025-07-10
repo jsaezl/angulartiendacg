@@ -5,6 +5,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatCardModule } from "@angular/material/card";
 import { MatChipsModule } from "@angular/material/chips";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
 import { ProductService, Product } from "../../core/services/product.service";
 import { CartService } from "../../core/services/cart.service";
 import { CategoryFilterComponent } from "../../shared/components/category-filter/category-filter.component";
@@ -22,6 +24,8 @@ import { Router } from "@angular/router";
     MatSnackBarModule,
     MatCardModule,
     MatChipsModule,
+    MatFormFieldModule,
+    MatSelectModule,
     CategoryFilterComponent,
     ProductSearchComponent,
   ],
@@ -40,6 +44,9 @@ export class ProductsComponent implements OnInit {
   selectedSubcategory: number | null = null;
   searchQuery: string = "";
   isSearchActive: boolean = false;
+
+  // Sorting
+  sortBy: string = "name-asc";
 
   constructor(
     private authService: AuthService,
@@ -62,6 +69,7 @@ export class ProductsComponent implements OnInit {
         if (response.success) {
           this.products = response.data;
           this.filteredProducts = [...this.products];
+          this.sortProducts();
         } else {
           this.error = response.message || "Error al cargar los productos";
         }
@@ -91,16 +99,19 @@ export class ProductsComponent implements OnInit {
     this.selectedSubcategory = null;
     this.isSearchActive = false;
     this.filteredProducts = [...this.products];
+    this.sortProducts();
   }
 
   onSearchResults(products: Product[]): void {
     this.filteredProducts = products;
     this.isSearchActive = true;
+    this.sortProducts();
   }
 
   onSearchCleared(): void {
     if (!this.selectedCategory) {
       this.filteredProducts = [...this.products];
+      this.sortProducts();
     }
     this.isSearchActive = false;
   }
@@ -115,6 +126,7 @@ export class ProductsComponent implements OnInit {
         next: (response) => {
           if (response.success) {
             this.filteredProducts = response.data;
+            this.sortProducts();
           } else {
             this.error =
               response.message || "Error al cargar productos de la categoría";
@@ -129,6 +141,29 @@ export class ProductsComponent implements OnInit {
           console.error("Error loading products by category:", err);
         },
       });
+  }
+
+  onSortChange(): void {
+    this.sortProducts();
+  }
+
+  private sortProducts(): void {
+    if (!this.filteredProducts.length) return;
+
+    this.filteredProducts.sort((a, b) => {
+      switch (this.sortBy) {
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        case 'price-asc':
+          return a.price - b.price;
+        case 'price-desc':
+          return b.price - a.price;
+        default:
+          return 0;
+      }
+    });
   }
 
   isAuthenticated(): boolean {
