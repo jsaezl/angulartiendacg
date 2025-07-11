@@ -1,12 +1,6 @@
 <mat-sidenav-container class="app-container">
   <mat-sidenav #sidenav mode="over" class="mobile-sidenav">
     <mat-nav-list>
-      <a
-        href="https://wa.me/56956688059?text=Hola%20quiero%20más%20información"
-        target="_blank"
-      >
-        <img src="assets/ico/whatsapp.svg" alt="WhatsApp" width="24" />
-      </a>
       <a mat-list-item routerLink="/products-list" (click)="sidenav.close()"
         >Productos</a
       >
@@ -31,6 +25,14 @@
         (click)="onLogout(); sidenav.close()"
         >Cerrar sesión</a
       >
+      <a
+        mat-list-item
+        href="https://wa.me/56956688059?text=Hola%20quiero%20más%20información"
+        target="_blank"
+      >
+        <img src="assets/ico/whatsapp.svg" alt="WhatsApp" width="24" />
+        <span> Ir a WhatsApp</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 
