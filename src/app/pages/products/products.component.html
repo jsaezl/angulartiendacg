@@ -135,7 +135,12 @@
           <div class="product-card" *ngFor="let product of filteredProducts">
             <div class="product-image-container">
               <img
-                [src]="'assets/images/' + product.id + '.jpg'"
+                [src]="
+                  'assets/images/products/' +
+                  product.id +
+                  '/' +
+                  fisrtImagen(product.imagesUrl || '')
+                "
                 [alt]="product.name"
                 class="product-image"
               />
@@ -150,6 +155,7 @@
                   <mat-icon *ngIf="!isAddingToCart(product.id)"
                     >add_shopping_cart</mat-icon
                   >
+
                   <mat-icon *ngIf="isAddingToCart(product.id)" class="spinner"
                     >hourglass_empty</mat-icon
                   >
@@ -175,6 +181,16 @@
                   {{ product.stock }} en stock
                 </span>
               </div>
+
+              <button
+                mat-fab
+                color="primary"
+                (click)="openPictures(product)"
+                class="quick-add-btn"
+              >
+                <mat-icon>zoom_in</mat-icon>
+              </button>
+
               <button
                 mat-raised-button
                 color="primary"

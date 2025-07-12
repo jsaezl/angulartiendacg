@@ -7,12 +7,15 @@ import { MatCardModule } from "@angular/material/card";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
-import { ProductService, Product } from "../../core/services/product.service";
+import { ProductService } from "../../core/services/product.service";
 import { CartService } from "../../core/services/cart.service";
 import { CategoryFilterComponent } from "../../shared/components/category-filter/category-filter.component";
 import { ProductSearchComponent } from "../../shared/components/product-search/product-search.component";
 import { AuthService } from "src/app/core/services/auth.service";
 import { Router } from "@angular/router";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { ProductImageComponent } from "./product-image/product-image.component";
+import { Product } from "src/app/core/models/product";
 
 @Component({
   selector: "app-products",
@@ -28,6 +31,7 @@ import { Router } from "@angular/router";
     MatSelectModule,
     CategoryFilterComponent,
     ProductSearchComponent,
+    MatDialogModule,
   ],
   templateUrl: "./products.component.html",
   styleUrls: ["./products.component.css"],
@@ -53,7 +57,8 @@ export class ProductsComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -152,13 +157,13 @@ export class ProductsComponent implements OnInit {
 
     this.filteredProducts.sort((a, b) => {
       switch (this.sortBy) {
-        case 'name-asc':
+        case "name-asc":
           return a.name.localeCompare(b.name);
-        case 'name-desc':
+        case "name-desc":
           return b.name.localeCompare(a.name);
-        case 'price-asc':
+        case "price-asc":
           return a.price - b.price;
-        case 'price-desc':
+        case "price-desc":
           return b.price - a.price;
         default:
           return 0;
@@ -222,6 +227,19 @@ export class ProductsComponent implements OnInit {
 
   isAddingToCart(productId: number): boolean {
     return this.addingToCart[productId] || false;
+  }
+
+  openPictures(product: Product): void {
+    this.dialog.open(ProductImageComponent, {
+      width: "500px",
+      data: { id: product.id, images: product.imagesUrl?.split(";") || [] },
+    });
+  }
+
+  fisrtImagen(images: string): string {
+    console.log("Product image URL:", images);
+
+    return images?.split(";")[0] ?? "";
   }
 
   getActiveFiltersCount(): number {

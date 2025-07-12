@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "../../../environments/environment";
-import { Product } from "./product.service";
 import { Order } from "./order.service";
 import { User } from "../models/user";
 import { Category, Subcategory } from "../models/category";
+import { Product } from "../models/product";
 
 export interface AdminDashboard {
   totalProducts: number;
@@ -28,6 +28,7 @@ export interface CreateProductRequest {
   keywords: string;
   categoryId?: number;
   subcategoryId?: number;
+  imagesUrl?: string;
 }
 
 export interface UpdateProductRequest {
@@ -39,6 +40,7 @@ export interface UpdateProductRequest {
   keywords: string;
   categoryId?: number;
   subcategoryId?: number;
+  imagesUrl?: string;
 }
 
 export interface UpdateOrderStatusRequest {

@@ -16,8 +16,9 @@ import {
   CreateProductRequest,
   UpdateProductRequest,
 } from "../../../core/services/admin.service";
-import { Product } from "../../../core/services/product.service";
+
 import { ProductDialogComponent } from "../product-dialog/product-dialog.component";
+import { Product } from "src/app/core/models/product";
 
 @Component({
   selector: "app-admin-products",
@@ -124,6 +125,7 @@ export class AdminProductsComponent implements OnInit {
       keywords: productData.keywords,
       categoryId: productData.categoryId,
       subcategoryId: productData.subcategoryId,
+      imagesUrl: productData.imagesUrl,
     };
 
     this.adminService.createProduct(createRequest).subscribe({
@@ -162,6 +164,7 @@ export class AdminProductsComponent implements OnInit {
       keywords: productData.keywords,
       categoryId: productData.categoryId,
       subcategoryId: productData.subcategoryId,
+      imagesUrl: productData.imagesUrl,
     };
 
     this.adminService.updateProduct(updateRequest).subscribe({

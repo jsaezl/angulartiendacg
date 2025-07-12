@@ -1,20 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, of } from "rxjs";
-import { delay, map } from "rxjs/operators";
 import { environment } from "../../../environments/environment";
 import { ApiResponse } from "../models/ApiResponse";
-
-export interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  keywords: string;
-  categoryId?: number;
-  subcategoryId?: number;
-}
+import { Product } from "../models/product";
 
 @Injectable({
   providedIn: "root",

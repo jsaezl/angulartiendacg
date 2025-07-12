@@ -18,7 +18,6 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
-import { Product } from "../../../core/services/product.service";
 import { AdminService } from "../../../core/services/admin.service";
 import { Category, Subcategory } from "../../../core/models/category";
 import { CategoryService } from "src/app/core/services/category.service";
@@ -26,6 +25,7 @@ import {
   AngularEditorConfig,
   AngularEditorModule,
 } from "@kolkov/angular-editor";
+import { Product } from "src/app/core/models/product";
 
 export interface ProductDialogData {
   product?: Product;
@@ -74,6 +74,7 @@ export class ProductDialogComponent implements OnInit {
       keywords: [""],
       categoryId: [null, [Validators.required]],
       subcategoryId: [null],
+      imagesUrl: [null],
     });
   }
 
@@ -101,6 +102,7 @@ export class ProductDialogComponent implements OnInit {
         keywords: this.data.product.keywords || "",
         categoryId: this.data.product.categoryId || null,
         subcategoryId: this.data.product.subcategoryId || null,
+        imagesUrl: this.data.product.imagesUrl || null,
       });
     }
 

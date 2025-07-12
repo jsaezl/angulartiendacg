@@ -1,19 +1,25 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatCardModule } from '@angular/material/card';
-import { Observable, of } from 'rxjs';
-import { map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { Product } from '../../../core/services/product.service';
-import { ProductService } from '../../../core/services/product.service';
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule, FormControl } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatCardModule } from "@angular/material/card";
+import { Observable, of } from "rxjs";
+import {
+  map,
+  startWith,
+  debounceTime,
+  distinctUntilChanged,
+  switchMap,
+} from "rxjs/operators";
+import { ProductService } from "../../../core/services/product.service";
+import { Product } from "src/app/core/models/product";
 
 @Component({
-  selector: 'app-product-search',
+  selector: "app-product-search",
   standalone: true,
   imports: [
     CommonModule,
@@ -24,16 +30,16 @@ import { ProductService } from '../../../core/services/product.service';
     MatIconModule,
     MatButtonModule,
     MatAutocompleteModule,
-    MatCardModule
+    MatCardModule,
   ],
-  templateUrl: './product-search.component.html',
-  styleUrls: ['./product-search.component.css']
+  templateUrl: "./product-search.component.html",
+  styleUrls: ["./product-search.component.css"],
 })
 export class ProductSearchComponent implements OnInit {
   @Output() searchResults = new EventEmitter<Product[]>();
   @Output() searchCleared = new EventEmitter<void>();
 
-  searchControl = new FormControl('');
+  searchControl = new FormControl("");
   filteredProducts: Observable<Product[]> = of([]);
   isSearching = false;
   searchResultsList: Product[] = [];
@@ -46,19 +52,19 @@ export class ProductSearchComponent implements OnInit {
 
   setupSearch(): void {
     this.filteredProducts = this.searchControl.valueChanges.pipe(
-      startWith(''),
+      startWith(""),
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(value => {
+      switchMap((value) => {
         if (!value || value.length < 2) {
           this.searchResultsList = [];
           this.searchCleared.emit();
           return of([]);
         }
-        
+
         this.isSearching = true;
         return this.productService.searchProducts(value).pipe(
-          map(response => {
+          map((response) => {
             this.isSearching = false;
             if (response.success) {
               this.searchResultsList = response.data;
@@ -92,25 +98,25 @@ export class ProductSearchComponent implements OnInit {
         },
         error: (error) => {
           this.isSearching = false;
-          console.error('Search error:', error);
+          console.error("Search error:", error);
           this.searchResultsList = [];
           this.searchResults.emit([]);
-        }
+        },
       });
     }
   }
 
   onClearSearch(): void {
-    this.searchControl.setValue('');
+    this.searchControl.setValue("");
     this.searchResultsList = [];
     this.searchCleared.emit();
   }
 
   displayFn(product: Product): string {
-    return product ? product.name : '';
+    return product ? product.name : "";
   }
 
   getProductImage(product: Product): string {
     return `assets/images/${product.id}.jpg`;
   }
-} 
+}
