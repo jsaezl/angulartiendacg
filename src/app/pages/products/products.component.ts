@@ -16,7 +16,7 @@ import { Router } from "@angular/router";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { ProductImageComponent } from "./product-image/product-image.component";
 import { Product } from "src/app/core/models/product";
-
+import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 @Component({
   selector: "app-products",
   standalone: true,
@@ -32,6 +32,7 @@ import { Product } from "src/app/core/models/product";
     CategoryFilterComponent,
     ProductSearchComponent,
     MatDialogModule,
+    MatPaginatorModule,
   ],
   templateUrl: "./products.component.html",
   styleUrls: ["./products.component.css"],
@@ -52,6 +53,9 @@ export class ProductsComponent implements OnInit {
   // Sorting
   sortBy: string = "name-asc";
 
+  pageSize = 12;
+  currentPage = 0;
+
   constructor(
     private authService: AuthService,
     private productService: ProductService,
@@ -60,6 +64,17 @@ export class ProductsComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog
   ) {}
+
+  get paginatedProducts() {
+    const start = this.currentPage * this.pageSize;
+    const end = start + this.pageSize;
+    return this.filteredProducts.slice(start, end);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+  }
 
   ngOnInit(): void {
     this.loadProducts();
@@ -92,6 +107,7 @@ export class ProductsComponent implements OnInit {
     categoryId: number;
     subcategoryId?: number;
   }): void {
+    this.currentPage = 0; // Reset to first page
     this.selectedCategory = filter.categoryId;
     this.selectedSubcategory = filter.subcategoryId || null;
     this.isSearchActive = false;
@@ -100,6 +116,7 @@ export class ProductsComponent implements OnInit {
   }
 
   onCategoryFilterCleared(): void {
+    this.currentPage = 0;
     this.selectedCategory = null;
     this.selectedSubcategory = null;
     this.isSearchActive = false;
@@ -108,12 +125,14 @@ export class ProductsComponent implements OnInit {
   }
 
   onSearchResults(products: Product[]): void {
+    this.currentPage = 0;
     this.filteredProducts = products;
     this.isSearchActive = true;
     this.sortProducts();
   }
 
   onSearchCleared(): void {
+    this.currentPage = 0;
     if (!this.selectedCategory) {
       this.filteredProducts = [...this.products];
       this.sortProducts();

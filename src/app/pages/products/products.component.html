@@ -132,7 +132,7 @@
         </div>
 
         <div class="products-grid" *ngIf="filteredProducts.length > 0">
-          <div class="product-card" *ngFor="let product of filteredProducts">
+          <div class="product-card" *ngFor="let product of paginatedProducts">
             <div class="product-image-container">
               <img
                 [src]="
@@ -213,6 +213,15 @@
             </div>
           </div>
         </div>
+        <mat-paginator
+          [length]="filteredProducts.length"
+          [pageSize]="pageSize"
+          [pageIndex]="currentPage"
+          [pageSizeOptions]="[4, 8, 12, 24]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+        >
+        </mat-paginator>
       </div>
     </main>
   </div>

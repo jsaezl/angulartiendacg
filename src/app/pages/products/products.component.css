@@ -3,6 +3,11 @@
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
+.mat-paginator {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
 /* Header Section */
 .page-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
