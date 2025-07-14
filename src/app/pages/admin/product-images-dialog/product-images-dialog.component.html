@@ -1,0 +1,204 @@
+<div class="product-images-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>photo_library</mat-icon>
+    Gestión de Imágenes - {{ product.name }}
+  </h2>
+
+  <mat-dialog-content>
+    <div class="dialog-content">
+      <!-- Área de upload -->
+      <div class="upload-section">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>cloud_upload</mat-icon>
+              Subir Imágenes
+            </mat-card-title>
+            <mat-card-subtitle>
+              Arrastra imágenes aquí o haz clic para seleccionar
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div
+              class="upload-area"
+              [class.drag-over]="dragOver"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
+            >
+              <div class="upload-content" *ngIf="canAddMoreImages()">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <p class="upload-text">
+                  Arrastra imágenes aquí o
+                  <label for="file-input" class="file-input-label">
+                    selecciona archivos
+                  </label>
+                </p>
+                <p class="upload-hint">
+                  Formatos: JPG, PNG, WebP | Máximo: 5MB por imagen
+                </p>
+                <input
+                  id="file-input"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  (change)="onFileSelected($event)"
+                  style="display: none"
+                />
+              </div>
+
+              <div class="upload-limit" *ngIf="!canAddMoreImages()">
+                <mat-icon class="limit-icon">warning</mat-icon>
+                <p>Límite de imágenes alcanzado ({{ maxImages }})</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Imágenes existentes -->
+      <div class="existing-images" *ngIf="existingImages.length > 0">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>photo_library</mat-icon>
+              Imágenes Existentes ({{ existingImages.length }})
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="images-grid">
+              <div
+                class="image-item existing"
+                *ngFor="let image of existingImages; let i = index"
+              >
+                <div class="image-container">
+                  <img [src]="image" [alt]="'Imagen ' + (i + 1)" />
+                  <div class="image-overlay">
+                    <button
+                      mat-icon-button
+                      class="remove-btn"
+                      matTooltip="Eliminar imagen"
+                      (click)="removeExistingImage(i)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div class="image-info">
+                  <span class="image-number">Imagen {{ i + 1 }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Imágenes nuevas -->
+      <div class="new-images" *ngIf="newImages.length > 0">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>add_photo_alternate</mat-icon>
+              Imágenes Nuevas ({{ newImages.length }})
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="images-grid">
+              <div
+                class="image-item new"
+                *ngFor="let image of newImages; let i = index"
+              >
+                <div class="image-container">
+                  <img
+                    [src]="image.preview"
+                    [alt]="'Nueva imagen ' + (i + 1)"
+                  />
+
+                  <!-- Progress bar durante upload -->
+                  <div class="upload-progress" *ngIf="image.uploading">
+                    <mat-progress-bar
+                      mode="determinate"
+                      [value]="image.progress"
+                      color="primary"
+                    ></mat-progress-bar>
+                    <span class="progress-text"
+                      >{{ image.progress | number : "1.0-0" }}%</span
+                    >
+                  </div>
+
+                  <!-- Overlay con controles -->
+                  <div class="image-overlay">
+                    <button
+                      mat-icon-button
+                      class="remove-btn"
+                      matTooltip="Eliminar imagen"
+                      (click)="removeNewImage(i)"
+                      [disabled]="image.uploading"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+
+                    <div class="upload-status" *ngIf="image.uploading">
+                      <mat-icon class="uploading-icon">cloud_upload</mat-icon>
+                    </div>
+
+                    <div class="upload-status" *ngIf="image.uploaded">
+                      <mat-icon class="uploaded-icon">check_circle</mat-icon>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="image-info">
+                  <span class="image-name">{{ image.file.name }}</span>
+                  <span class="image-size"
+                    >{{
+                      image.file.size / 1024 / 1024 | number : "1.1-1"
+                    }}
+                    MB</span
+                  >
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Resumen -->
+      <div class="summary">
+        <mat-card>
+          <mat-card-content>
+            <div class="summary-stats">
+              <div class="stat-item">
+                <mat-icon>photo_library</mat-icon>
+                <span>Total: {{ getTotalImages() }}/{{ maxImages }}</span>
+              </div>
+              <div class="stat-item" *ngIf="isUploading()">
+                <mat-icon class="uploading">cloud_upload</mat-icon>
+                <span>Subiendo...</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSave()"
+      [disabled]="!canSave()"
+    >
+      <mat-icon>save</mat-icon>
+      Guardar Cambios
+    </button>
+  </mat-dialog-actions>
+</div>

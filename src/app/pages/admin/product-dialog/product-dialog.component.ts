@@ -74,7 +74,6 @@ export class ProductDialogComponent implements OnInit {
       keywords: [""],
       categoryId: [null, [Validators.required]],
       subcategoryId: [null],
-      imagesUrl: [null],
     });
   }
 
@@ -102,7 +101,6 @@ export class ProductDialogComponent implements OnInit {
         keywords: this.data.product.keywords || "",
         categoryId: this.data.product.categoryId || null,
         subcategoryId: this.data.product.subcategoryId || null,
-        imagesUrl: this.data.product.imagesUrl || null,
       });
     }
 

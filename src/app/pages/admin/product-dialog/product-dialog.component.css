@@ -58,3 +58,29 @@ editor-container {
   background: white;
   font-family: Roboto, sans-serif;
 }
+
+.images-section {
+  margin-bottom: 20px;
+}
+
+.images-info {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 16px;
+  background: #fafafa;
+}
+
+.images-hint {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.manage-images-btn {
+  width: 100%;
+}
+
+.manage-images-btn mat-icon {
+  margin-right: 8px;
+}

@@ -58,6 +58,30 @@
           <td mat-cell *matCellDef="let product">{{ product.stock }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="images">
+          <th mat-header-cell *matHeaderCellDef>Imágenes</th>
+          <td mat-cell *matCellDef="let product">
+            <div class="images-cell">
+              <app-product-images-preview
+                [images]="getProductImages(product)"
+                [maxDisplay]="3"
+                [showCount]="false"
+                [clickable]="true"
+                (imageClick)="openImagesDialog(product)"
+              ></app-product-images-preview>
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="openImagesDialog(product)"
+                matTooltip="Gestionar imágenes"
+                class="images-btn"
+              >
+                <mat-icon>photo_library</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let product">

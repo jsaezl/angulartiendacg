@@ -18,6 +18,8 @@ import {
 } from "../../../core/services/admin.service";
 
 import { ProductDialogComponent } from "../product-dialog/product-dialog.component";
+import { ProductImagesDialogComponent } from "../product-images-dialog/product-images-dialog.component";
+import { ProductImagesPreviewComponent } from "../../../shared/components/product-images-preview/product-images-preview.component";
 import { Product } from "src/app/core/models/product";
 
 @Component({
@@ -36,6 +38,7 @@ import { Product } from "src/app/core/models/product";
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
+    ProductImagesPreviewComponent,
   ],
   templateUrl: "./admin-products.component.html",
   styleUrls: ["./admin-products.component.css"],
@@ -49,6 +52,7 @@ export class AdminProductsComponent implements OnInit {
     "description",
     "price",
     "stock",
+    "images",
     "actions",
   ];
 
@@ -125,7 +129,6 @@ export class AdminProductsComponent implements OnInit {
       keywords: productData.keywords,
       categoryId: productData.categoryId,
       subcategoryId: productData.subcategoryId,
-      imagesUrl: productData.imagesUrl,
     };
 
     this.adminService.createProduct(createRequest).subscribe({
@@ -164,7 +167,6 @@ export class AdminProductsComponent implements OnInit {
       keywords: productData.keywords,
       categoryId: productData.categoryId,
       subcategoryId: productData.subcategoryId,
-      imagesUrl: productData.imagesUrl,
     };
 
     this.adminService.updateProduct(updateRequest).subscribe({
@@ -220,5 +222,66 @@ export class AdminProductsComponent implements OnInit {
         },
       });
     }
+  }
+
+  openImagesDialog(product: Product): void {
+    let images = product.imagesUrl?.split(";") || [];
+
+    images = images.map(
+      (p) => "assets/images/products/" + product.id + "/" + p
+    );
+
+    const dialogRef = this.dialog.open(ProductImagesDialogComponent, {
+      width: "900px",
+      maxHeight: "90vh",
+      data: { product, images },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.images) {
+        this.updateProductImages(product.id, result.images);
+      }
+    });
+  }
+
+  updateProductImages(productId: number, images: string[]): void {
+    this.adminService.updateProductImages({ productId, images }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.snackBar.open("Imágenes actualizadas exitosamente", "Cerrar", {
+            duration: 3000,
+          });
+          this.loadProducts();
+        } else {
+          this.snackBar.open(
+            response.message || "Error al actualizar imágenes",
+            "Cerrar",
+            {
+              duration: 3000,
+            }
+          );
+        }
+      },
+      error: (error) => {
+        console.error("Error updating product images:", error);
+        this.snackBar.open("Error al actualizar imágenes", "Cerrar", {
+          duration: 3000,
+        });
+      },
+    });
+  }
+
+  getProductImages(product: Product): string[] {
+    let images = product.imagesUrl?.split(";") || [];
+
+    images = images.map(
+      (p) => "assets/images/products/" + product.id + "/" + p
+    );
+
+    return images;
+  }
+
+  getImageCount(product: Product): number {
+    return this.getProductImages(product).length;
   }
 }

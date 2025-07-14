@@ -1,0 +1,34 @@
+<div class="images-preview" *ngIf="hasImages()">
+  <div class="images-container">
+    <div 
+      class="image-item"
+      *ngFor="let image of displayImages; let i = index"
+      [class.clickable]="clickable"
+      (click)="onImageClick(image)"
+    >
+      <img 
+        [src]="image" 
+        [alt]="'Imagen ' + (i + 1)"
+        [title]="'Imagen ' + (i + 1)"
+        loading="lazy"
+      />
+    </div>
+    
+    <div 
+      class="more-images"
+      *ngIf="remainingCount > 0"
+      [matTooltip]="'+' + remainingCount + ' más'"
+    >
+      <span class="more-count">+{{ remainingCount }}</span>
+    </div>
+  </div>
+  
+  <div class="image-count" *ngIf="showCount">
+    {{ images.length }} imagen{{ images.length !== 1 ? 'es' : '' }}
+  </div>
+</div>
+
+<div class="no-images" *ngIf="!hasImages()">
+  <mat-icon>image_not_supported</mat-icon>
+  <span>Sin imágenes</span>
+</div> 

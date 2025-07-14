@@ -43,6 +43,11 @@ export interface UpdateProductRequest {
   imagesUrl?: string;
 }
 
+export interface UpdateProductImagesRequest {
+  productId: number;
+  images: string[];
+}
+
 export interface UpdateOrderStatusRequest {
   orderId: number;
   status: string;
@@ -98,6 +103,43 @@ export class AdminService {
   deleteProduct(id: number): Observable<ApiResponse<object>> {
     return this.http.delete<ApiResponse<object>>(
       `${this.apiUrl}/products/${id}`
+    );
+  }
+
+  // Product Images Management
+  updateProductImages(
+    request: UpdateProductImagesRequest
+  ): Observable<ApiResponse<Product>> {
+    console.log("Updating product images:", request);
+
+    return this.http.put<ApiResponse<Product>>(
+      `${this.apiUrl}/products/${request.productId}/images`,
+      request
+    );
+  }
+
+  uploadProductImage(
+    productId: number,
+    file: File
+  ): Observable<ApiResponse<{ url: string }>> {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    return this.http.post<ApiResponse<{ url: string }>>(
+      `${this.apiUrl}/products/${productId}/images/upload`,
+      formData
+    );
+  }
+
+  deleteProductImage(
+    productId: number,
+    imageUrl: string
+  ): Observable<ApiResponse<object>> {
+    console.log("Deleting product image:", { productId, imageUrl });
+
+    return this.http.delete<ApiResponse<object>>(
+      `${this.apiUrl}/products/${productId}/images`,
+      { body: { imageUrl } }
     );
   }
 
