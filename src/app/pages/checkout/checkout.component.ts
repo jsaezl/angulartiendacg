@@ -58,7 +58,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
 
   cartItems = signal<CartItem[]>([]);
+  subTotal = signal<number>(0);
+  shippingCost = signal<number>(0);
+  descuento = signal<number>(0); // New signal for discount
   cartTotal = signal<number>(0);
+
   loading = signal<boolean>(true);
   processing = signal<boolean>(false);
   checkoutForm!: FormGroup;
@@ -72,10 +76,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadRegiones();
     this.loadCartItems();
+
     this.cartSubscription = this.cartService.cartItems$.subscribe((items) => {
       this.cartItems.set(items);
       this.calculateTotal();
     });
+
     this.initForm();
   }
 
@@ -158,6 +164,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
               comunaId: response.data.comunaId,
             });
 
+            this.shippingCost.set(response.data.shippingCost || 0);
+            this.calculateTotal();
             // Load comunas for the selected region
             if (response.data.regionId) {
               this.waitForRegions(() => {
@@ -190,6 +198,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.loadComunas(regionId);
       });
     }
+  }
+
+  onComunaChange(comunaId: number): void {
+    console.log("Region changed from template:", comunaId);
+    var cost = this.comunas.find((c) => c.id === comunaId)?.shippingCost;
+    this.shippingCost.set(cost || 0);
+    this.calculateTotal();
   }
 
   loadCartItems(): void {
@@ -262,10 +277,22 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   calculateTotal(): void {
-    const total = this.cartItems().reduce(
-      (sum, item) => sum + item.totalPrice,
-      0
+    console.log("Calculating total for cart items");
+
+    this.subTotal.set(
+      this.cartItems().reduce((sum, item) => sum + item.totalPrice, 0)
     );
+
+    if (this.shippingCost() == 1990 && this.subTotal() >= 80000) {
+      this.descuento.set(1990);
+    } else if (this.shippingCost() == 4990 && this.subTotal() >= 100000) {
+      this.descuento.set(4990);
+    } else {
+      this.descuento.set(0);
+    }
+
+    let total = this.subTotal() + this.shippingCost() - this.descuento(); // Apply discount if any
+
     this.cartTotal.set(total);
   }
 

@@ -98,6 +98,7 @@
                   <mat-select
                     formControlName="comunaId"
                     [disabled]="loadingComunas || comunas.length === 0"
+                    (selectionChange)="onComunaChange($event.value)"
                   >
                     <mat-option *ngIf="loadingComunas" value="" disabled>
                       <mat-spinner diameter="20"></mat-spinner>
@@ -176,12 +177,19 @@
             <div class="order-total">
               <div class="total-row">
                 <span>Subtotal:</span>
-                <span>${{ cartTotal().toFixed(0) }}</span>
+                <span>{{ subTotal().toFixed(0) }}</span>
               </div>
+
               <div class="total-row">
                 <span>Envío:</span>
-                <span>Gratis</span>
+                <span>{{ shippingCost().toFixed(0) }}</span>
               </div>
+
+              <div class="total-row">
+                <span>Descuento:</span>
+                <span>-{{ descuento().toFixed(0) }}</span>
+              </div>
+
               <div class="total-row final-total">
                 <span>Total:</span>
                 <span>${{ cartTotal().toFixed(0) }}</span>

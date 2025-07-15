@@ -53,6 +53,7 @@ export interface OrderHeader {
   customerName?: string;
   customerEmail?: string;
   customerPhone?: string;
+  shippingCost: number;
 }
 
 @Injectable({

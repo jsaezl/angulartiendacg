@@ -8,4 +8,5 @@ export interface Comuna {
   id: number;
   name: string;
   regionId: number;
+  shippingCost: number;
 }
