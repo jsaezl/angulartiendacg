@@ -283,15 +283,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.cartItems().reduce((sum, item) => sum + item.totalPrice, 0)
     );
 
-    if (this.shippingCost() == 1990 && this.subTotal() >= 80000) {
-      this.descuento.set(1990);
-    } else if (this.shippingCost() == 4990 && this.subTotal() >= 100000) {
-      this.descuento.set(4990);
-    } else {
-      this.descuento.set(0);
-    }
+    if (this.subTotal() >= 90000) this.descuento.set(this.shippingCost());
+    else this.descuento.set(0);
 
-    let total = this.subTotal() + this.shippingCost() - this.descuento(); // Apply discount if any
+    let total = this.subTotal() + this.shippingCost() - this.descuento();
 
     this.cartTotal.set(total);
   }
