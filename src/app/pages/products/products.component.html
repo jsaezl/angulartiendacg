@@ -92,6 +92,7 @@
             <mat-form-field appearance="outline" class="sort-select">
               <mat-label>Ordenar por</mat-label>
               <mat-select [(value)]="sortBy" (selectionChange)="onSortChange()">
+                <mat-option value=""> --Seleccionar Orden-- </mat-option>
                 <mat-option value="name-asc">
                   <mat-icon>sort_by_alpha</mat-icon>
                   Nombre A-Z

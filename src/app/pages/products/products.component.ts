@@ -51,7 +51,7 @@ export class ProductsComponent implements OnInit {
   isSearchActive: boolean = false;
 
   // Sorting
-  sortBy: string = "name-asc";
+  sortBy: string = "";
 
   pageSize = 12;
   currentPage = 0;
