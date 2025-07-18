@@ -21,10 +21,19 @@
     </app-product-search>
   </div>
 
+  <!-- Mobile Category Filter (visible only on mobile) -->
+  <div class="mobile-category-filter">
+    <app-category-filter
+      (categorySelected)="onCategorySelected($event)"
+      (clearFilter)="onCategoryFilterCleared()"
+    >
+    </app-category-filter>
+  </div>
+
   <!-- Main Content -->
   <div class="main-content">
-    <!-- Sidebar with Categories -->
-    <aside class="sidebar">
+    <!-- Desktop Sidebar with Categories -->
+    <aside class="sidebar desktop-sidebar">
       <app-category-filter
         (categorySelected)="onCategorySelected($event)"
         (clearFilter)="onCategoryFilterCleared()"

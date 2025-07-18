@@ -4,6 +4,9 @@
       <mat-card-title>
         <mat-icon>category</mat-icon>
         Categorías
+        <span *ngIf="selectedCategory || selectedSubcategory" class="active-indicator">
+          <mat-icon>filter_list</mat-icon>
+        </span>
       </mat-card-title>
     </mat-card-header>
 
